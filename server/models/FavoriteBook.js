@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 const dateFormat = require('../utils/dateFormat');
 
 const favoriteBookSchema = new Schema({
-  favoritedBy: {
+  favoredBy: {
     type: String,
     required: true,
     trim: true,
@@ -60,6 +60,6 @@ const favoriteBookSchema = new Schema({
   ],
 });
 
-const Thought = model('FavoriteBook', thoughtSchema);
+const FavoriteBook = model('FavoriteBook', favoriteBookSchema);
 
-module.exports = Thought;
+module.exports = FavoriteBook;
