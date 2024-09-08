@@ -47,7 +47,7 @@ const resolvers = {
 
       return { token, user };
     },
-    addfavoriteBook: async (parent, { title, author, genre, synopsis, publisher}, context) => {
+    addFavoriteBook: async (parent, { title, author, genre, synopsis, publisher}, context) => {
       if (context.user) {
         const favoriteBook = await FavoriteBook.create({
           favoredBy: context.user.username,
