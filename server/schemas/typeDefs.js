@@ -44,7 +44,7 @@ const typeDefs = `
     login(email: String!, password: String!): Auth
     addFavoriteBook(title: String!, author: String!, genre: String!, synopsis: String!, publisher: String! ): FavoriteBook
     addComment(favoriteBookId: ID!, commentText: String!): FavoriteBook
-    unfavoriteBook(favoriteBookId: ID!): FavoriteBook
+    unFavoriteBook(favoriteBookId: ID!): FavoriteBook
     removeComment(favoriteBookId: ID!, commentId: ID!): FavoriteBook
   }
 `;

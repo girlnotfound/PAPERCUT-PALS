@@ -12,7 +12,7 @@ db.once('open', async () => {
 
     await User.create(userSeeds);
 
-    for (let i = 0; i < thoughtSeeds.length; i++) {
+    for (let i = 0; i < favoriteBookSeeds.length; i++) {
       const { _id, favoredBy } = await FavoriteBook.create(favoriteBookSeeds[i]);
       const user = await User.findOneAndUpdate(
         { username: favoredBy },
