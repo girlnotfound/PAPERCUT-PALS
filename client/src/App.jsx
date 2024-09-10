@@ -8,12 +8,12 @@ function App() {
 
   return (
     <div className="book-club-container">
-      {location.pathname !== "/signin" && location.pathname !== "/" && <Header />}
-      {location.pathname !== "/signin" && location.pathname !== "/" && <Navigation />}
+      {location.pathname !== "/signin" && location.pathname !== "/signup" && location.pathname !== "/" && <Header />}
+      {location.pathname !== "/signin" && location.pathname !== "/signup" && location.pathname !== "/" && <Navigation />}
       <main className="book-club-content">
         <Outlet />
       </main>
-      {location.pathname !== "/signin" && location.pathname !== "/" && <Footer />}
+      {location.pathname !== "/signin" && location.pathname !== "/signup" && location.pathname !== "/" && <Footer />}
     </div>
   );
 }
