@@ -11,7 +11,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import App from "./App";
 import ErrorPage from "./pages/Error";
 import Homepage from "./pages/Homepage";
-// import Library from "./pages/Library";
+import Library from "./pages/Library";
 // import MyFavorites from "./pages/MyFavorites";
 import SignIn from "./pages/SignIn";
 
@@ -25,7 +25,7 @@ const routerConfig = [
       { index: true, element: <Navigate to="/signin" replace /> },
       { path: "/signin", element: <SignIn /> },
       { path: "/homepage", element: <Homepage /> },
-      // { path: "/library", element: <Library /> },
+      { path: "/Library", element: <Library /> },
       // { path: "/my-favorites", element: <MyFavorites /> },
     ],
   },
