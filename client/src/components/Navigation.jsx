@@ -1,4 +1,5 @@
 'use client'
+import { Link as RouterLink } from 'react-router-dom'
 import {
   Box,
   Flex,
@@ -17,14 +18,18 @@ import {
   Stack,
 } from '@chakra-ui/react' 
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 
-const Links = ['Homepage', 'Library', 'MyFavorites']
+const Links = [
+  { name: 'Homepage', path: '/homepage' },
+  { name: 'Library', path: '/library' },
+  { name: 'MyFavorites', path: '/my-favorites' }
+]
 
-const NavLink = ({ children }) => {
+const NavLink = ({ children, to }) => {
   return (
     <Box
-      as="a"
+      as={RouterLink}
       px={2}
       py={1}
       rounded={'md'}
@@ -32,7 +37,7 @@ const NavLink = ({ children }) => {
         textDecoration: 'none',
         bg: useColorModeValue('gray.200', 'gray.700'),
       }}
-      href={'#'}>
+      to={to}>
       {children}
     </Box>
   )
@@ -40,9 +45,10 @@ const NavLink = ({ children }) => {
 
 NavLink.propTypes = {
   children: PropTypes.node.isRequired,
-};
+  to: PropTypes.string.isRequired,
+}
 
-export default function Simple() {
+export default function Navigation() {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
@@ -57,10 +63,9 @@ export default function Simple() {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={8} alignItems={'center'}>
-            <Box>Logo</Box>
             <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
               {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
+                <NavLink key={link.name} to={link.path}>{link.name}</NavLink>
               ))}
             </HStack>
           </HStack>
@@ -93,7 +98,7 @@ export default function Simple() {
           <Box pb={4} display={{ md: 'none' }}>
             <Stack as={'nav'} spacing={4}>
               {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
+                <NavLink key={link.name} to={link.path}>{link.name}</NavLink>
               ))}
             </Stack>
           </Box>
@@ -103,6 +108,7 @@ export default function Simple() {
       <Box p={4} display="flex" justifyContent="center" alignItems="center" width="100%">
   Main Content Here
 </Box>
+
     </>
   )
 }
