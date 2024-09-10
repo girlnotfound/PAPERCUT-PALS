@@ -12,7 +12,7 @@
   width: 100%;  /* Takes full width to respect centering */
   height: 70vh; /* Set to 70% of the viewport height */
   display: flex;          /* Ensures that flex properties apply to child elements */
-  flex-direction: column; /* Stacks children vertically */
+  flex-direction: row; /* Stacks children vertically */
   justify-content: center; /* Vertically centers the children */
 }
 
