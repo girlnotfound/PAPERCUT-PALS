@@ -8,8 +8,11 @@ export default function Homepage() {
 
   useEffect(() => {
     const flickity = new Flickity(carouselRef.current, {
-      cellAlign: "left",
+      cellAlign: "center",
       contain: true,
+      wrapAround: true,
+      selectedAttraction: 0.02,  // Lower values make the motion smoother
+      friction: 0.8             // Higher values slow down the motion faster
     });
 
     return () => {
@@ -21,11 +24,12 @@ export default function Homepage() {
     { title: "Book 1", author: "Author 1" },
     { title: "Book 2", author: "Author 2" },
     { title: "Book 3", author: "Author 3" },
+    { title: "Book 4", author: "Author 4" },
+    { title: "Book 5", author: "Author 5" },
   ];
 
   return (
     <div className="homepage-container page-container">
-      <h1>PAPERCUT PALS</h1>
       <div className="carousel" ref={carouselRef}>
         {books.map((book, index) => (
           <div key={index} className="carousel-cell">
