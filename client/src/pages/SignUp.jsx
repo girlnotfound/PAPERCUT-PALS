@@ -24,7 +24,7 @@ import rightImage from "/images/right_facing_pink_glasses.png";
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
 
-const SignIn = () => {
+const SignUp = () => {
   // state to toggle password visibility
   const [showPassword, setShowPassword] = useState(false);
   // function to handle password visibility toggle
@@ -91,6 +91,28 @@ const SignIn = () => {
                 boxShadow="lg"
                 borderRadius="xl"
               >
+                
+
+                {/* username input field */}
+                <FormControl>
+                  <InputGroup size="lg">
+                    {" "}
+                    <InputLeftElement pointerEvents="none">
+                      <CFaUserAlt color="#929aab" />
+                    </InputLeftElement>
+                    <Input
+                      type="text"
+                      placeholder="Username"
+                      borderColor="#929aab"
+                      _hover={{ borderColor: "#393e46" }}
+                      _focus={{
+                        borderColor: "#393e46",
+                        boxShadow: "0 0 0 1px #393e46",
+                      }}
+                    />
+                  </InputGroup>
+                </FormControl>
+
                 {/* email input field */}
                 <FormControl>
                   <InputGroup size="lg">
@@ -142,16 +164,9 @@ const SignIn = () => {
                       </Button>
                     </InputRightElement>
                   </InputGroup>
-
-                  {/* forgot password link */}
-                  <FormHelperText textAlign="right" mt={2}>
-                    <Link color="#393e46" _hover={{ color: "#929aab" }}>
-                      Forgot password?
-                    </Link>
-                  </FormHelperText>
                 </FormControl>
 
-                {/* login button */}
+                {/* sign up button*/}
                 <Button
                   borderRadius="md"
                   type="submit"
@@ -162,25 +177,12 @@ const SignIn = () => {
                   size="lg"
                   _hover={{ bg: "#929aab" }}
                 >
-                  Sign In
+                  Sign Up
                 </Button>
               </Stack>
             </form>
           </Box>
         </Stack>
-
-        {/* sign up link */}
-        <Box mt={8}>
-          New to us?{" "}
-          <Link
-            color="#393e46"
-            _hover={{ color: "#929aab" }}
-            href="/signup"
-            fontWeight="bold"
-          >
-            Sign Up
-          </Link>
-        </Box>
       </Flex>
 
       {/* left image */}
@@ -204,4 +206,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;
