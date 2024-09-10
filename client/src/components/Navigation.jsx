@@ -105,10 +105,6 @@ export default function Navigation() {
         ) : null}
       </Box>
 
-      <Box p={4} display="flex" justifyContent="center" alignItems="center" width="100%">
-  Main Content Here
-</Box>
-
     </>
   )
 }
