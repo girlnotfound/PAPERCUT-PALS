@@ -1,5 +1,6 @@
 header, footer{
   background: linear-gradient(-20deg, #d558c8 0%, #24d292 100%);
+  text-align: center;
 }
 
 /* homepage carousel styling */
@@ -36,10 +37,4 @@ header, footer{
 .flickity-enabled:focus .flickity-viewport {
   outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
-}
-
-.header {
-  display: flex;
-  justify-content: center;
-  max-height: 150px;
 }
