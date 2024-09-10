@@ -18,7 +18,7 @@ const Footer = () => {
           >
             ❤️
           </span>{" "}
-          by the Your Project Team
+          by The PAPERCUT PALS Dev Team
         </h4>
         <p className="mt-3">
           &copy; {currentYear} PAPERCUT PALS. All rights reserved.
