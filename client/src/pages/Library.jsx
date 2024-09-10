@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
-import { Box, SimpleGrid, Button, Image, Text, useColorModeValue } from "@chakra-ui/react";
+import { Box, SimpleGrid, useColorModeValue } from "@chakra-ui/react";
+import BookCard from "../components/BookCard";
 
 const Library = () => {
   const [books, setBooks] = useState([]);
@@ -34,45 +34,19 @@ const Library = () => {
   };
 
   return (
-      <Box p={4} sx={{ background: bgGradient, minHeight: "100vh" }}>
-        <SimpleGrid columns={[1, 2, 3, 4]} spacing={6}>
-          {books.map((book) => (
-            <Box
-              key={book.id}
-              borderWidth={1}
-              borderRadius="lg"
-              overflow="hidden"
-            >
-              <Image
-                src={
-                  book.volumeInfo.imageLinks?.thumbnail ||
-                  "https://via.placeholder.com/128x192"
-                }
-                alt={book.volumeInfo.title}
-              />
-              <Box p={3}>
-                <Text fontWeight="bold" isTruncated>
-                  {book.volumeInfo.title}
-                </Text>
-                <Text fontSize="sm" isTruncated>
-                  {book.volumeInfo.authors?.join(", ")}
-                </Text>
-                <Button as={Link} to={`/book/${book.id}`} size="sm" mt={2}>
-                  View Details
-                </Button>
-                <Button
-                  onClick={() => addToFavorites(book)}
-                  size="sm"
-                  mt={2}
-                  ml={2}
-                >
-                  Add to Favorites
-                </Button>
-              </Box>
-            </Box>
-          ))}
-        </SimpleGrid>
-      </Box>
+    <Box p={4} sx={{ background: bgGradient, minHeight: "100vh" }}>
+      <SimpleGrid columns={[1, 2, 3, 4]} spacing={6}>
+        {books.map((book) => (
+          <BookCard 
+            key={book.id} 
+            book={book} 
+            addToFavorites={addToFavorites} 
+            imageHeight="500px" // Adjusts Image Height
+            boxWidth="400px"  // Adjusts box width
+          />
+        ))}
+      </SimpleGrid>
+    </Box>
   );
 };
 

@@ -14,7 +14,8 @@ import Homepage from "./pages/Homepage";
 import Library from "./pages/Library";
 import MyFavorites from "./pages/MyFavorites";
 import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp"
+import SignUp from "./pages/SignUp";
+import AboutUs from './pages/AboutUS';
 
 // router configuration
 const routerConfig = [
@@ -29,6 +30,7 @@ const routerConfig = [
       { path: "/library", element: <Library /> },
       { path: "/my-favorites", element: <MyFavorites /> },
       { path: "/signup", element: <SignUp />},
+      { path: "/about-us", element: <AboutUs />},
     ],
   },
 ];
