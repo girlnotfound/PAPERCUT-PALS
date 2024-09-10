@@ -12,7 +12,7 @@ import App from "./App";
 import ErrorPage from "./pages/Error";
 import Homepage from "./pages/Homepage";
 import Library from "./pages/Library";
-// import MyFavorites from "./pages/MyFavorites";
+import MyFavorites from "./pages/MyFavorites";
 import SignIn from "./pages/SignIn";
 
 // router configuration
@@ -25,8 +25,8 @@ const routerConfig = [
       { index: true, element: <Navigate to="/signin" replace /> },
       { path: "/signin", element: <SignIn /> },
       { path: "/homepage", element: <Homepage /> },
-      { path: "/Library", element: <Library /> },
-      // { path: "/my-favorites", element: <MyFavorites /> },
+      { path: "/library", element: <Library /> },
+      { path: "/my-favorites", element: <MyFavorites /> },
     ],
   },
 ];
