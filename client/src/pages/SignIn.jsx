@@ -19,6 +19,7 @@ import {
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import leftImage from "/images/left_facing_green_glasses.png";
 import rightImage from "/images/right_facing_pink_glasses.png";
+import logo from "/images/PapercutPals_Logo_Letering_only.png";
 
 // create Chakra UI versions of the icon components
 const CFaUserAlt = chakra(FaUserAlt);
@@ -40,6 +41,23 @@ const SignIn = () => {
       alignItems="center"
       bgGradient="linear(-20deg, #d558c8 0%, #24d292 100%)"
     >
+      {/* logo */}
+      <Box
+        position="absolute"
+        top="35px"
+        left="50%"
+        transform="translateX(-50%)"
+        zIndex="1"
+      >
+        <Image
+          src={logo}
+          alt="PapercutPals Logo"
+          width=" 450px"
+          height="auto"
+          mb={8}
+        />
+      </Box>
+
       {/* right image */}
       <Box
         display={{ base: "none", lg: "flex" }}
