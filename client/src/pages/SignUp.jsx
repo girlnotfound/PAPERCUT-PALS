@@ -16,6 +16,9 @@ import {
   InputRightElement,
   Image,
 } from "@chakra-ui/react";
+import { useMutation } from '@apollo/client';
+import { ADD_USER } from '../utils/mutations';
+import Auth from '../utils/auth';
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import leftImage from "/images/left_facing_green_glasses.png";
 import rightImage from "/images/right_facing_pink_glasses.png";
@@ -29,6 +32,37 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   // function to handle password visibility toggle
   const handleShowClick = () => setShowPassword(!showPassword);
+
+const [formState, setFormState] = useState({
+    username: '',
+    email: '',
+    password: '',
+  });
+  const [addUser, { error, data }] = useMutation(ADD_USER);
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    setFormState({
+      ...formState,
+      [name]: value,
+    });
+  };
+
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    console.log(formState);
+
+    try {
+      const { data } = await addUser({
+        variables: { ...formState },
+      });
+
+      Auth.login(data.addUser.token);
+    } catch (e) {
+      console.error(e.message);
+    }
+  };
 
   return (
     // main container
@@ -83,7 +117,7 @@ const SignUp = () => {
           {/* form container */}
           <Box width="100%">
             {" "}
-            <form>
+            <form onSubmit={handleFormSubmit}>
               <Stack
                 spacing={6}
                 p={{ base: "1.5rem", md: "2rem" }}
@@ -103,7 +137,10 @@ const SignUp = () => {
                     <Input
                       type="text"
                       placeholder="Username"
+                      name="username"
                       borderColor="#929aab"
+                      value={formState.name}
+                      onChange={handleChange}
                       _hover={{ borderColor: "#393e46" }}
                       _focus={{
                         borderColor: "#393e46",
@@ -121,7 +158,10 @@ const SignUp = () => {
                       <CFaUserAlt color="#929aab" />
                     </InputLeftElement>
                     <Input
+                      name="email"
                       type="email"
+                      value={formState.email}
+                      onChange={handleChange}
                       placeholder="Email address"
                       borderColor="#929aab"
                       _hover={{ borderColor: "#393e46" }}
@@ -143,6 +183,9 @@ const SignUp = () => {
                     <Input
                       type={showPassword ? "text" : "password"}
                       placeholder="Password"
+                      name="password"
+                      value={formState.password}
+                      onChange={handleChange}
                       borderColor="#929aab"
                       _hover={{ borderColor: "#393e46" }}
                       _focus={{
