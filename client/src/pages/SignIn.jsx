@@ -34,9 +34,6 @@ const SignIn = () => {
     // main container
     <Flex
       className="main-container"
-      width="100vw"
-      height="100vh"
-      backgroundColor="#f7f7f7"
       justifyContent="center"
       alignItems="center"
       bgGradient="linear(-20deg, #d558c8 0%, #24d292 100%)"
@@ -49,7 +46,6 @@ const SignIn = () => {
         left="50%"
         transform="translateX(-50%)"
         zIndex="1"
-        mb={{ base: "40px", md: "60px", lg: "80px" }}
       >
         <Image
           className="logo"
@@ -61,15 +57,7 @@ const SignIn = () => {
       </Box>
 
       {/* right image */}
-      <Box
-        className="side-image right-image"
-        display={{ base: "none", lg: "flex" }}
-        width="15%"
-        height="auto"
-        alignItems="flex-start"
-        justifyContent="flex-end"
-        alignSelf="center"
-      >
+      <Box className="side-image right-image">
         <Image
           src={rightImage}
           alt="right facing Papercut Pal"
@@ -83,11 +71,8 @@ const SignIn = () => {
       <Flex
         className="central-content"
         flexDirection="column"
-        width={{ base: "100%", lg: "50%" }}
-        height="auto"
         justifyContent="flex-start"
         alignItems="center"
-        mt={{ base: "20px", lg: "80px" }}
       >
         {/* stack for centering content */}
         <Stack
@@ -96,7 +81,6 @@ const SignIn = () => {
           mb="2"
           justifyContent="center"
           alignItems="center"
-          width={{ base: "90%", md: "70%", lg: "80%" }}
           spacing={8}
         >
           {/* form container */}
@@ -212,16 +196,7 @@ const SignIn = () => {
       </Flex>
 
       {/* left image */}
-      <Box
-        className="side-image left-image"
-        display={{ base: "none", lg: "flex" }}
-        width="15%"
-        height="auto"
-        alignItems="flex-start"
-        justifyContent="flex-end"
-        flexDirection="row-reverse"
-        alignSelf="center"
-      >
+      <Box className="side-image left-image">
         <Image
           src={leftImage}
           alt="left facing Papercut Pal"
