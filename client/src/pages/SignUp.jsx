@@ -15,6 +15,7 @@ import {
   FormHelperText,
   InputRightElement,
   Image,
+  FormErrorMessage
 } from "@chakra-ui/react";
 import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../utils/mutations';
@@ -49,19 +50,53 @@ const [formState, setFormState] = useState({
   };
 
 
+  const [errors, setErrors] = useState({
+    username: '',
+    email: '',
+    password: ''
+  });
+
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = { username: '', email: '', password: '' };
+  
+    if (!formState.username.trim()) {
+      newErrors.username = 'Username is required';
+      isValid = false;
+    }
+  
+    if (!formState.email.trim()) {
+      newErrors.email = 'Email is required';
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formState.email)) {
+      newErrors.email = 'Email is invalid';
+      isValid = false;
+    }
+  
+    if (!formState.password) {
+      newErrors.password = 'Password is required';
+      isValid = false;
+    } else if (formState.password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters long';
+      isValid = false;
+    }
+  
+    setErrors(newErrors);
+    return isValid;
+  };
+  
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    console.log(formState);
-
-    try {
-      const { data } = await addUser({
-        variables: { ...formState },
-      });
-
-      Auth.login(data.addUser.token);
-    } catch (e) {
-      console.log(e.message, e.name)
-      console.error(e.name);
+    if (validateForm()) {
+      try {
+        const { data } = await addUser({
+          variables: { ...formState },
+        });
+        Auth.login(data.addUser.token);
+      } catch (e) {
+        console.error(e);
+        setErrors({ ...errors, form: e.message });
+      }
     }
   };
 
@@ -129,7 +164,7 @@ const [formState, setFormState] = useState({
                 
 
                 {/* username input field */}
-                <FormControl>
+                <FormControl isInvalid={!!errors.username}>
                   <InputGroup size="lg">
                     {" "}
                     <InputLeftElement pointerEvents="none">
@@ -149,10 +184,11 @@ const [formState, setFormState] = useState({
                       }}
                     />
                   </InputGroup>
+                  <FormErrorMessage>{errors.username}</FormErrorMessage>
                 </FormControl>
 
                 {/* email input field */}
-                <FormControl>
+                <FormControl isInvalid={!!errors.email}>
                   <InputGroup size="lg">
                     {" "}
                     <InputLeftElement pointerEvents="none">
@@ -172,10 +208,11 @@ const [formState, setFormState] = useState({
                       }}
                     />
                   </InputGroup>
+                  <FormErrorMessage>{errors.email}</FormErrorMessage>
                 </FormControl>
 
                 {/* password input field */}
-                <FormControl>
+                <FormControl isInvalid={!!errors.password}>
                   <InputGroup size="lg">
                     {" "}
                     <InputLeftElement pointerEvents="none" color="#929aab">
@@ -208,6 +245,7 @@ const [formState, setFormState] = useState({
                       </Button>
                     </InputRightElement>
                   </InputGroup>
+                  <FormErrorMessage>{errors.password}</FormErrorMessage>
                 </FormControl>
 
                 {/* sign up button*/}
