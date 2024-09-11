@@ -1,7 +1,6 @@
 import { useState } from "react";
 import {
   Flex,
-  Heading,
   Input,
   Button,
   InputGroup,
@@ -10,7 +9,6 @@ import {
   chakra,
   Box,
   Link,
-  Avatar,
   FormControl,
   FormHelperText,
   InputRightElement,
@@ -20,6 +18,7 @@ import { FaUserAlt, FaLock } from "react-icons/fa";
 import leftImage from "/images/left_facing_green_glasses.png";
 import rightImage from "/images/right_facing_pink_glasses.png";
 import logo from "/images/PapercutPals_Logo_Letering_only.png";
+import "../styles/style.css";
 
 // create Chakra UI versions of the icon components
 const CFaUserAlt = chakra(FaUserAlt);
@@ -34,6 +33,7 @@ const SignIn = () => {
   return (
     // main container
     <Flex
+      className="main-container"
       width="100vw"
       height="100vh"
       backgroundColor="#f7f7f7"
@@ -43,28 +43,32 @@ const SignIn = () => {
     >
       {/* logo */}
       <Box
+        className="logo-container"
         position="absolute"
-        top="35px"
+        top="50px"
         left="50%"
         transform="translateX(-50%)"
         zIndex="1"
+        mb={{ base: "40px", md: "60px", lg: "80px" }}
       >
         <Image
+          className="logo"
           src={logo}
           alt="PapercutPals Logo"
-          width=" 450px"
+          width="auto"
           height="auto"
-          mb={8}
         />
       </Box>
 
       {/* right image */}
       <Box
+        className="side-image right-image"
         display={{ base: "none", lg: "flex" }}
         width="15%"
         height="auto"
-        alignItems="center"
+        alignItems="flex-start"
         justifyContent="flex-end"
+        alignSelf="center"
       >
         <Image
           src={rightImage}
@@ -77,14 +81,17 @@ const SignIn = () => {
 
       {/* central content */}
       <Flex
+        className="central-content"
         flexDirection="column"
         width={{ base: "100%", lg: "50%" }}
-        height="100%"
-        justifyContent="center"
+        height="auto"
+        justifyContent="flex-start"
         alignItems="center"
+        mt={{ base: "20px", lg: "80px" }}
       >
         {/* stack for centering content */}
         <Stack
+          className="content-stack"
           flexDir="column"
           mb="2"
           justifyContent="center"
@@ -92,17 +99,12 @@ const SignIn = () => {
           width={{ base: "90%", md: "70%", lg: "80%" }}
           spacing={8}
         >
-          {/* avatar and heading */}
-          <Avatar bg="#929aab" size="xl" />
-          <Heading color="#393e46" size="2xl">
-            Welcome
-          </Heading>
-
           {/* form container */}
-          <Box width="100%">
+          <Box className="form-wrapper" width="100%">
             {" "}
             <form>
               <Stack
+                className="form-stack"
                 spacing={6}
                 p={{ base: "1.5rem", md: "2rem" }}
                 backgroundColor="#e7eaf6"
@@ -117,6 +119,7 @@ const SignIn = () => {
                       <CFaUserAlt color="#929aab" />
                     </InputLeftElement>
                     <Input
+                      className="input-field"
                       type="email"
                       placeholder="Email address"
                       borderColor="#929aab"
@@ -137,6 +140,7 @@ const SignIn = () => {
                       <CFaLock color="#929aab" />
                     </InputLeftElement>
                     <Input
+                      className="input-field"
                       type={showPassword ? "text" : "password"}
                       placeholder="Password"
                       borderColor="#929aab"
@@ -149,6 +153,7 @@ const SignIn = () => {
                     {/* password visibility toggle button */}
                     <InputRightElement width="4.5rem">
                       <Button
+                        className="show-hide-btn"
                         h="1.75rem"
                         size="sm"
                         onClick={handleShowClick}
@@ -162,7 +167,11 @@ const SignIn = () => {
                   </InputGroup>
 
                   {/* forgot password link */}
-                  <FormHelperText textAlign="right" mt={2}>
+                  <FormHelperText
+                    className="forgot-password"
+                    textAlign="right"
+                    mt={2}
+                  >
                     <Link color="#393e46" _hover={{ color: "#929aab" }}>
                       Forgot password?
                     </Link>
@@ -171,6 +180,7 @@ const SignIn = () => {
 
                 {/* login button */}
                 <Button
+                  className="signin-btn"
                   borderRadius="md"
                   type="submit"
                   variant="solid"
@@ -188,7 +198,7 @@ const SignIn = () => {
         </Stack>
 
         {/* sign up link */}
-        <Box mt={8}>
+        <Box className="signup-link" mt={8}>
           New to us?{" "}
           <Link
             color="#393e46"
@@ -203,12 +213,14 @@ const SignIn = () => {
 
       {/* left image */}
       <Box
+        className="side-image left-image"
         display={{ base: "none", lg: "flex" }}
         width="15%"
         height="auto"
-        alignItems="center"
+        alignItems="flex-start"
         justifyContent="flex-end"
         flexDirection="row-reverse"
+        alignSelf="center"
       >
         <Image
           src={leftImage}

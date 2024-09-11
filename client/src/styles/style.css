@@ -1,4 +1,5 @@
-header, footer{
+header,
+footer {
   background: linear-gradient(-20deg, #d558c8 0%, #24d292 100%);
   text-align: center;
   display: flex;
@@ -10,22 +11,22 @@ header, footer{
   text-align: center;
   display: flex;
   justify-content: center; /* Centers horizontally */
-  align-items: center;     /* Centers vertically */
-  height: 75vh;            /* Adjust if necessary to fit your design needs */
+  align-items: center; /* Centers vertically */
+  height: 75vh; /* Adjust if necessary to fit your design needs */
 }
 
 .carousel {
   background: #a2a2a2;
-  width: 100%;  /* Takes full width to respect centering */
+  width: 100%; /* Takes full width to respect centering */
   height: 70vh; /* Set to 70% of the viewport height */
-  display: flex;          /* Ensures that flex properties apply to child elements */
+  display: flex; /* Ensures that flex properties apply to child elements */
   flex-direction: row; /* Stacks children vertically */
   justify-content: center; /* Vertically centers the children */
 }
 
 .carousel-cell {
   width: 30%;
-  height: 100%;  /* Set to 80% of the .carousel height */
+  height: 100%; /* Set to 80% of the .carousel height */
   margin-right: 10px;
   background: #8c8;
   border-radius: 5px;
@@ -39,4 +40,12 @@ header, footer{
 .flickity-enabled:focus .flickity-viewport {
   outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
+}
+
+/* responsive design */
+/* started with SignIn.jsx */
+@media (max-width: 768px) {
+}
+
+@media (max-width: 480px) {
 }
