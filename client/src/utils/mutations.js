@@ -7,8 +7,6 @@ export const ADD_USER = gql`
       user {
         _id
         username
-        email
-        password
       }
     }
   }
@@ -26,14 +24,3 @@ export const LOGIN_USER = gql`
   }
 `;
 
-export const CREATE_VOTE = gql`
-  mutation createVote($_id: String!, $techNum: Int!) {
-    createVote(_id: $_id, techNum: $techNum) {
-      _id
-      tech1
-      tech2
-      tech1_votes
-      tech2_votes
-    }
-  }
-`;

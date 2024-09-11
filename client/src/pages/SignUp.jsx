@@ -60,7 +60,8 @@ const [formState, setFormState] = useState({
 
       Auth.login(data.addUser.token);
     } catch (e) {
-      console.error(e.message);
+      console.log(e.message, e.name)
+      console.error(e.name);
     }
   };
 
