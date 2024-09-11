@@ -42,10 +42,62 @@ footer {
   outline: 5px auto -webkit-focus-ring-color;
 }
 
+/* base styles for SignIn.jsx */
+.main-container {
+  width: 100vw;
+  height: 100vh;
+}
+
+.logo-container {
+  margin-bottom: 80px;
+}
+
+.central-content {
+  width: 50%;
+  margin-top: 80px;
+}
+
+.content-stack {
+  width: 80%;
+}
+
+.side-image {
+  display: flex;
+  width: 15%;
+}
+
 /* responsive design */
 /* started with SignIn.jsx */
 @media (max-width: 768px) {
+  .logo-container {
+    margin-bottom: 60px;
+  }
+
+  .central-content {
+    width: 70%;
+    margin-top: 60px;
+  }
+
+  .content-stack {
+    width: 90%;
+  }
+
+  .side-image {
+    display: none;
+  }
 }
 
 @media (max-width: 480px) {
+  .logo-container {
+    margin-bottom: 40px;
+  }
+
+  .central-content {
+    width: 90%;
+    margin-top: 40px;
+  }
+
+  .content-stack {
+    width: 100%;
+  }
 }
