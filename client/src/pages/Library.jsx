@@ -7,7 +7,6 @@ const Library = () => {
   const [books, setBooks] = useState([]);
   const [favorites, setFavorites] = useState([]);
 
-  // Define the background color
   const bgGradient = useColorModeValue(
     "linear-gradient(-20deg, #d558c8 0%, #24d292 100%)",
     "linear-gradient(-20deg, #d558c8 0%, #24d292 100%)"
@@ -15,6 +14,10 @@ const Library = () => {
 
   useEffect(() => {
     fetchBooks();
+    const storedFavorites = JSON.parse(
+      localStorage.getItem("favorites") || "[]"
+    );
+    setFavorites(storedFavorites);
   }, []);
 
   const fetchBooks = async () => {
@@ -29,20 +32,29 @@ const Library = () => {
   };
 
   const addToFavorites = (book) => {
-    setFavorites([...favorites, book]);
-    // You might want to save this to localStorage or a backend service
+    const updatedFavorites = [...favorites, book];
+    setFavorites(updatedFavorites);
+    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+  };
+
+  const removeFromFavorites = (book) => {
+    const updatedFavorites = favorites.filter((fav) => fav.id !== book.id);
+    setFavorites(updatedFavorites);
+    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
   };
 
   return (
     <Box p={4} sx={{ background: bgGradient, minHeight: "100vh" }}>
       <SimpleGrid columns={[1, 2, 3, 4]} spacing={1}>
         {books.map((book) => (
-          <BookCard 
-            key={book.id} 
-            book={book} 
-            addToFavorites={addToFavorites} 
-            imageHeight="440px" // Adjusts Image Height
-            boxWidth="300px"  // Adjusts box width
+          <BookCard
+            key={book.id}
+            book={book}
+            addToFavorites={addToFavorites}
+            removeFromFavorites={removeFromFavorites}
+            isFavorite={favorites.some((fav) => fav.id === book.id)}
+            imageHeight="440px"
+            boxWidth="300px"
           />
         ))}
       </SimpleGrid>
@@ -51,4 +63,3 @@ const Library = () => {
 };
 
 export default Library;
-
