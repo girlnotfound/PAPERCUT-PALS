@@ -65,7 +65,7 @@ const SignIn = () => {
       }
     } catch (e) {
       console.error(e);
-      setAlertMessage("An error occurred. Please try again.");
+      setAlertMessage("Invalid credentials. If you're a new user, please sign up first.");
     }
   
     // clear form values
@@ -134,7 +134,7 @@ const SignIn = () => {
             {(error || alertMessage) && (
               <Alert status='error' mb={4}>
                 <AlertIcon />
-                {error ? error.message : alertMessage}
+                {alertMessage}
               </Alert>
             )}
             <form onSubmit={handleFormSubmit}>
