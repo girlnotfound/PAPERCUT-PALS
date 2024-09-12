@@ -18,6 +18,8 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import AboutUs from './pages/AboutUS';
 import UserProfile from './pages/UserProfile';
+import BookDetails from './pages/BookDetails';
+
 
 // router configuration
 const routerConfig = [
@@ -34,6 +36,7 @@ const routerConfig = [
       { path: "/signup", element: <SignUp />},
       { path: "/about-us", element: <AboutUs />},
       { path: "/UserProfile", element: <UserProfile />},
+      { path: "/book/:id", element: <BookDetails /> },
     ],
   },
 ];

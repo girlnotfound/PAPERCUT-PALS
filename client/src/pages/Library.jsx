@@ -35,14 +35,14 @@ const Library = () => {
 
   return (
     <Box p={4} sx={{ background: bgGradient, minHeight: "100vh" }}>
-      <SimpleGrid columns={[1, 2, 3, 4]} spacing={6}>
+      <SimpleGrid columns={[1, 2, 3, 4]} spacing={1}>
         {books.map((book) => (
           <BookCard 
             key={book.id} 
             book={book} 
             addToFavorites={addToFavorites} 
-            imageHeight="500px" // Adjusts Image Height
-            boxWidth="400px"  // Adjusts box width
+            imageHeight="440px" // Adjusts Image Height
+            boxWidth="300px"  // Adjusts box width
           />
         ))}
       </SimpleGrid>
