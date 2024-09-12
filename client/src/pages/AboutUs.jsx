@@ -79,7 +79,7 @@ const CreatorCard = ({ name, image, github, email }) => {
     { name: "Justin Herrera", image: "https://avatars.githubusercontent.com/u/163674455?v=4", github: "https://github.com/Justino11247", email: "herrerajustin11@gmail.com" },
     { name: "Kaila Ronquilo", image: "https://avatars.githubusercontent.com/u/150276019?v=4", github: "https://github.com/girlnotfound", email: "carol@example.com" },
     { name: "Renz Carl Supnet", image: "https://avatars.githubusercontent.com/u/31431868?v=4", github: "https://github.com/renzsupnet", email: "david@example.com" },
-    { name: "Ryan Peterson", image: "https://avatars.githubusercontent.com/u/164073199?v=4", github: "https://github.com/RyanPetersen-89", email: "eve@example.com" },
+    { name: "Ryan Petersen", image: "https://avatars.githubusercontent.com/u/164073199?v=4", github: "https://github.com/RyanPetersen-89", email: "eve@example.com" },
   ];
 
   return (
