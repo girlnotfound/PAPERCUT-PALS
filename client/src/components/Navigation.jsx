@@ -19,6 +19,7 @@ import {
 } from '@chakra-ui/react' 
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
 import PropTypes from 'prop-types'
+import Auth from '../utils/auth';
 
 const Links = [
   { name: 'Homepage', path: '/homepage' },
@@ -88,7 +89,7 @@ export default function Navigation() {
               <MenuList>
                 <MenuItem>Profile</MenuItem>
                 <MenuDivider />
-                <MenuItem>Logout</MenuItem>
+                <MenuItem onClick={Auth.logout}>Logout</MenuItem>
               </MenuList>
             </Menu>
           </Flex>
