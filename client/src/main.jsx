@@ -19,6 +19,7 @@ import SignUp from "./pages/SignUp";
 import AboutUs from './pages/AboutUS';
 import UserProfile from './pages/UserProfile';
 import BookDetails from './pages/BookDetails';
+import SearchBar from "./components/SearchBar";
 
 
 // router configuration
@@ -37,6 +38,7 @@ const routerConfig = [
       { path: "/about-us", element: <AboutUs />},
       { path: "/UserProfile", element: <UserProfile />},
       { path: "/book/:id", element: <BookDetails /> },
+      { path: "/SearchBaR", element: <SearchBar /> },
     ],
   },
 ];
