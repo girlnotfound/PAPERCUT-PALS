@@ -7,6 +7,7 @@ import {
 import "./styles/style.css";
 import { ChakraProvider } from "@chakra-ui/react";
 
+
 // component imports
 import App from "./App";
 import ErrorPage from "./pages/Error";
@@ -16,6 +17,7 @@ import MyFavorites from "./pages/MyFavorites";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import AboutUs from './pages/AboutUS';
+import UserProfile from './pages/UserProfile';
 
 // router configuration
 const routerConfig = [
@@ -31,6 +33,7 @@ const routerConfig = [
       { path: "/my-favorites", element: <MyFavorites /> },
       { path: "/signup", element: <SignUp />},
       { path: "/about-us", element: <AboutUs />},
+      { path: "/UserProfile", element: <UserProfile />},
     ],
   },
 ];
