@@ -101,3 +101,120 @@ footer {
     width: 100%;
   }
 }
+
+
+/* base styles for UserProfile.jsx */
+.user-profile-page {
+  background-color: #f0f0f0;
+  min-height: 100vh;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-profile-page .header {
+  font-size: 2.5em;
+  color: #333;
+  margin-bottom: 30px;
+  text-align: center;
+  width: 100%;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.form-item {
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.centered-form-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.centered-form-item label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.centered-form-item input[type="text"],
+.centered-form-item input[type="email"],
+.centered-form-item textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  margin-top: 5px;
+}
+
+.centered-form-item textarea {
+  height: 100px;
+  resize: vertical;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 400px; /* Match the width of your form items */
+  margin-top: 20px;
+}
+
+.profile-button {
+  background-color: #007bff;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 25px; /* Rounded corners */
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 10px 0;
+  width: 100%;
+  transition: background-color 0.3s, transform 0.1s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.profile-button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.profile-button:active {
+  transform: translateY(1px);
+}
+
+.profile-button.upload {
+  background-color: #28a745; /* Green color for upload button */
+}
+
+.profile-button.upload:hover {
+  background-color: #218838;
+}

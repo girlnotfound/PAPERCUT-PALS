@@ -84,9 +84,12 @@ export default function Navigation() {
                     'https://avatars.githubusercontent.com/u/5844161?v=4'
                   }
                 />
+                
               </MenuButton>
               <MenuList>
-                <MenuItem>Profile</MenuItem>
+              <MenuItem>
+  <NavLink to="/UserProfile">Profile</NavLink>
+</MenuItem>
                 <MenuDivider />
                 <MenuItem>Logout</MenuItem>
               </MenuList>
