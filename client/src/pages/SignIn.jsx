@@ -13,12 +13,18 @@ import {
   FormHelperText,
   InputRightElement,
   Image,
+  Alert,
+  AlertIcon
 } from "@chakra-ui/react";
+import Auth from '../utils/auth';
+import { useMutation } from '@apollo/client';
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import leftImage from "/images/left_facing_green_glasses.png";
 import rightImage from "/images/right_facing_pink_glasses.png";
 import logo from "/images/PapercutPals_Logo_Letering_only.png";
 import "../styles/style.css";
+import { LOGIN_USER } from '../utils/mutations';
+
 
 // create Chakra UI versions of the icon components
 const CFaUserAlt = chakra(FaUserAlt);
@@ -27,8 +33,47 @@ const CFaLock = chakra(FaLock);
 const SignIn = () => {
   // state to toggle password visibility
   const [showPassword, setShowPassword] = useState(false);
+  const [formState, setFormState] = useState({ email: '', password: '' });
+  const [login, { error, data }] = useMutation(LOGIN_USER);
+  const [alertMessage, setAlertMessage] = useState(null);
   // function to handle password visibility toggle
   const handleShowClick = () => setShowPassword(!showPassword);
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    setFormState({
+      ...formState,
+      [name]: value,
+    });
+  };
+
+  // submit form
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    setAlertMessage(null); // Clear any existing alert
+    console.log(formState);
+    try {
+      const { data } = await login({
+        variables: { ...formState },
+      });
+  
+      if (data && data.login && data.login.token) {
+        Auth.login(data.login.token);
+      } else {
+        setAlertMessage("Invalid credentials. If you're a new user, please sign up first.");
+      }
+    } catch (e) {
+      console.error(e);
+      setAlertMessage("An error occurred. Please try again.");
+    }
+  
+    // clear form values
+    setFormState({
+      email: '',
+      password: '',
+    });
+  };
 
   return (
     // main container
@@ -86,7 +131,13 @@ const SignIn = () => {
           {/* form container */}
           <Box className="form-wrapper" width="100%">
             {" "}
-            <form>
+            {(error || alertMessage) && (
+              <Alert status='error' mb={4}>
+                <AlertIcon />
+                {error ? error.message : alertMessage}
+              </Alert>
+            )}
+            <form onSubmit={handleFormSubmit}>
               <Stack
                 className="form-stack"
                 spacing={6}
@@ -105,6 +156,9 @@ const SignIn = () => {
                     <Input
                       className="input-field"
                       type="email"
+                      name="email"
+                      value={formState.email}
+                      onChange={handleChange}
                       placeholder="Email address"
                       borderColor="#929aab"
                       _hover={{ borderColor: "#393e46" }}
@@ -126,6 +180,9 @@ const SignIn = () => {
                     <Input
                       className="input-field"
                       type={showPassword ? "text" : "password"}
+                      value={formState.password}
+                      onChange={handleChange}
+                      name="password"
                       placeholder="Password"
                       borderColor="#929aab"
                       _hover={{ borderColor: "#393e46" }}
