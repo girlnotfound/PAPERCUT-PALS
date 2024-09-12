@@ -26,7 +26,7 @@ const BookCard = ({ book, addToFavorites, imageHeight = "300px", boxWidth="200px
         bg="white"
         border={'1px'}
         borderColor="black"
-        boxShadow={useColorModeValue('10px 10px 0 black', '10px 10px 0 cyan')}
+        boxShadow={useColorModeValue('10px 10px 0 #323535', '10px 10px 0 cyan')}
         >
         <Box h={imageHeight} borderBottom={'1px'} borderColor="black">
           <Img
