@@ -15,7 +15,11 @@ import {
   FormHelperText,
   InputRightElement,
   Image,
+  FormErrorMessage
 } from "@chakra-ui/react";
+import { useMutation } from '@apollo/client';
+import { ADD_USER } from '../utils/mutations';
+import Auth from '../utils/auth';
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import leftImage from "/images/left_facing_green_glasses.png";
 import rightImage from "/images/right_facing_pink_glasses.png";
@@ -29,6 +33,72 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   // function to handle password visibility toggle
   const handleShowClick = () => setShowPassword(!showPassword);
+
+const [formState, setFormState] = useState({
+    username: '',
+    email: '',
+    password: '',
+  });
+  const [addUser, { error, data }] = useMutation(ADD_USER);
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    setFormState({
+      ...formState,
+      [name]: value,
+    });
+  };
+
+
+  const [errors, setErrors] = useState({
+    username: '',
+    email: '',
+    password: ''
+  });
+
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = { username: '', email: '', password: '' };
+  
+    if (!formState.username.trim()) {
+      newErrors.username = 'Username is required';
+      isValid = false;
+    }
+  
+    if (!formState.email.trim()) {
+      newErrors.email = 'Email is required';
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formState.email)) {
+      newErrors.email = 'Email is invalid';
+      isValid = false;
+    }
+  
+    if (!formState.password) {
+      newErrors.password = 'Password is required';
+      isValid = false;
+    } else if (formState.password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters long';
+      isValid = false;
+    }
+  
+    setErrors(newErrors);
+    return isValid;
+  };
+  
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    if (validateForm()) {
+      try {
+        const { data } = await addUser({
+          variables: { ...formState },
+        });
+        Auth.login(data.addUser.token);
+      } catch (e) {
+        console.error(e);
+        setErrors({ ...errors, form: e.message });
+      }
+    }
+  };
 
   return (
     // main container
@@ -83,7 +153,7 @@ const SignUp = () => {
           {/* form container */}
           <Box width="100%">
             {" "}
-            <form>
+            <form onSubmit={handleFormSubmit}>
               <Stack
                 spacing={6}
                 p={{ base: "1.5rem", md: "2rem" }}
@@ -94,7 +164,7 @@ const SignUp = () => {
                 
 
                 {/* username input field */}
-                <FormControl>
+                <FormControl isInvalid={!!errors.username}>
                   <InputGroup size="lg">
                     {" "}
                     <InputLeftElement pointerEvents="none">
@@ -103,7 +173,10 @@ const SignUp = () => {
                     <Input
                       type="text"
                       placeholder="Username"
+                      name="username"
                       borderColor="#929aab"
+                      value={formState.name}
+                      onChange={handleChange}
                       _hover={{ borderColor: "#393e46" }}
                       _focus={{
                         borderColor: "#393e46",
@@ -111,17 +184,21 @@ const SignUp = () => {
                       }}
                     />
                   </InputGroup>
+                  <FormErrorMessage>{errors.username}</FormErrorMessage>
                 </FormControl>
 
                 {/* email input field */}
-                <FormControl>
+                <FormControl isInvalid={!!errors.email}>
                   <InputGroup size="lg">
                     {" "}
                     <InputLeftElement pointerEvents="none">
                       <CFaUserAlt color="#929aab" />
                     </InputLeftElement>
                     <Input
+                      name="email"
                       type="email"
+                      value={formState.email}
+                      onChange={handleChange}
                       placeholder="Email address"
                       borderColor="#929aab"
                       _hover={{ borderColor: "#393e46" }}
@@ -131,10 +208,11 @@ const SignUp = () => {
                       }}
                     />
                   </InputGroup>
+                  <FormErrorMessage>{errors.email}</FormErrorMessage>
                 </FormControl>
 
                 {/* password input field */}
-                <FormControl>
+                <FormControl isInvalid={!!errors.password}>
                   <InputGroup size="lg">
                     {" "}
                     <InputLeftElement pointerEvents="none" color="#929aab">
@@ -143,6 +221,9 @@ const SignUp = () => {
                     <Input
                       type={showPassword ? "text" : "password"}
                       placeholder="Password"
+                      name="password"
+                      value={formState.password}
+                      onChange={handleChange}
                       borderColor="#929aab"
                       _hover={{ borderColor: "#393e46" }}
                       _focus={{
@@ -164,6 +245,7 @@ const SignUp = () => {
                       </Button>
                     </InputRightElement>
                   </InputGroup>
+                  <FormErrorMessage>{errors.password}</FormErrorMessage>
                 </FormControl>
 
                 {/* sign up button*/}

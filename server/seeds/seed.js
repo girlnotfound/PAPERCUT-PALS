@@ -10,19 +10,19 @@ db.once('open', async () => {
 
     await cleanDB('User', 'users');
 
-    await User.create(userSeeds);
+    // await User.create(userSeeds);
 
-    for (let i = 0; i < favoriteBookSeeds.length; i++) {
-      const { _id, favoredBy } = await FavoriteBook.create(favoriteBookSeeds[i]);
-      const user = await User.findOneAndUpdate(
-        { username: favoredBy },
-        {
-          $addToSet: {
-            favoriteBooks: _id,
-          },
-        }
-      );
-    }
+    // for (let i = 0; i < favoriteBookSeeds.length; i++) {
+    //   const { _id, favoredBy } = await FavoriteBook.create(favoriteBookSeeds[i]);
+    //   const user = await User.findOneAndUpdate(
+    //     { username: favoredBy },
+    //     {
+    //       $addToSet: {
+    //         favoriteBooks: _id,
+    //       },
+    //     }
+    //   );
+    // }
   } catch (err) {
     console.error(err);
     process.exit(1);
