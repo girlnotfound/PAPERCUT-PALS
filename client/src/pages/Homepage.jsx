@@ -15,6 +15,7 @@ const BookOfTheMonth = () => {
     "linear-gradient(-20deg, #d558c8 0%, #24d292 100%)"
   );
   const [books, setBooks] = useState([]);
+  const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedBookId, setExpandedBookId] = useState(null);
 
@@ -36,10 +37,16 @@ const BookOfTheMonth = () => {
               const randomIndex = Math.floor(
                 Math.random() * response.data.items.length
               );
+              const book = response.data.items[randomIndex];
               return {
-                ...response.data.items[randomIndex].volumeInfo,
+                id: book.id,
+                volumeInfo: {
+                  ...book.volumeInfo,
+                  imageLinks: book.volumeInfo.imageLinks || {
+                    thumbnail: "https://via.placeholder.com/128x192",
+                  },
+                },
                 month,
-                id: response.data.items[randomIndex].id,
               };
             })
           );
@@ -53,11 +60,22 @@ const BookOfTheMonth = () => {
     };
 
     fetchBooks();
+    const storedFavorites = JSON.parse(
+      localStorage.getItem("favorites") || "[]"
+    );
+    setFavorites(storedFavorites);
   }, []);
 
   const addToFavorites = (book) => {
-    // Implement your logic to add the book to favorites
-    console.log("Adding to favorites:", book);
+    const updatedFavorites = [...favorites, book];
+    setFavorites(updatedFavorites);
+    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+  };
+
+  const removeFromFavorites = (book) => {
+    const updatedFavorites = favorites.filter((fav) => fav.id !== book.id);
+    setFavorites(updatedFavorites);
+    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
   };
 
   return (
@@ -74,23 +92,19 @@ const BookOfTheMonth = () => {
                 <Skeleton key={index} height="400px" borderRadius="lg" />
               ))
           : books.map((book) => (
-              <React.Fragment key={book.id}>
-                <BookCard
-                  book={book}
-                  showComments={expandedBookId === book.id}
-                  addToFavorites={addToFavorites}
-                  onClick={() =>
-                    setExpandedBookId(
-                      book.id === expandedBookId ? null : book.id
-                    )
-                  }
-                />
-                {expandedBookId === book.id && (
-                  <Box gridColumn="1 / -1">
-                    <CommentSection bookId={book.id} />
-                  </Box>
-                )}
-              </React.Fragment>
+              <BookCard
+                key={book.id}
+                book={book}
+                showComments={expandedBookId === book.id}
+                addToFavorites={addToFavorites}
+                removeFromFavorites={removeFromFavorites}
+                isFavorite={favorites.some((fav) => fav.id === book.id)}
+                onClick={() =>
+                  setExpandedBookId(book.id === expandedBookId ? null : book.id)
+                }
+                imageHeight="440px"
+                boxWidth="300px"
+              />
             ))}
       </SimpleGrid>
     </Box>

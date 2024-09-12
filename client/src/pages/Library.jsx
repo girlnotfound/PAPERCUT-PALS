@@ -45,7 +45,7 @@ const Library = () => {
 
   return (
     <Box p={4} sx={{ background: bgGradient, minHeight: "100vh" }}>
-      <SimpleGrid columns={[1, 2, 3, 4]} spacing={1}>
+      <SimpleGrid columns={[1, 2, 3, 4, 5]} spacing={1}>
         {books.map((book) => (
           <BookCard
             key={book.id}
