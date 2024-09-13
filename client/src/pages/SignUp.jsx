@@ -1,5 +1,7 @@
 import { useState } from "react";
 import {
+  Alert,
+  AlertIcon,
   Flex,
   Heading,
   Input,
@@ -31,6 +33,7 @@ const CFaLock = chakra(FaLock);
 const SignUp = () => {
   // state to toggle password visibility
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   // function to handle password visibility toggle
   const handleShowClick = () => setShowPassword(!showPassword);
 
@@ -47,6 +50,7 @@ const [formState, setFormState] = useState({
       ...formState,
       [name]: value,
     });
+    setErrorMessage('');
   };
 
 
@@ -95,7 +99,7 @@ const [formState, setFormState] = useState({
         Auth.login(data.addUser.token);
       } catch (e) {
         console.error(e);
-        setErrors({ ...errors, form: e.message });
+        setErrorMessage('Account details already exist please sign in instead!');
       }
     }
   };
@@ -153,6 +157,12 @@ const [formState, setFormState] = useState({
           {/* form container */}
           <Box width="100%">
             {" "}
+            {errorMessage && (
+              <Alert status="error" mb={4}>
+                <AlertIcon />
+                {errorMessage}
+              </Alert>
+            )}
             <form onSubmit={handleFormSubmit}>
               <Stack
                 spacing={6}
