@@ -21,7 +21,7 @@ import { BsHeartFill, BsHeart } from "react-icons/bs";
 const BookDetails = () => {
   const { id } = useParams();
   const [book, setBook] = useState(null);
-  const [liked, setLiked] = useState(false);
+  const [favorites, setFavorites] = useState([]);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
 
@@ -37,12 +37,39 @@ const BookDetails = () => {
       }
     };
     fetchBook();
+
+    const storedFavorites = JSON.parse(
+      localStorage.getItem("favorites") || "[]"
+    );
+    setFavorites(storedFavorites);
   }, [id]);
 
   const handleAddComment = () => {
     if (newComment.trim()) {
       setComments([...comments, { id: Date.now(), text: newComment }]);
       setNewComment("");
+    }
+  };
+
+  const addToFavorites = (book) => {
+    const updatedFavorites = [...favorites, book];
+    setFavorites(updatedFavorites);
+    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+  };
+
+  const removeFromFavorites = (book) => {
+    const updatedFavorites = favorites.filter((fav) => fav.id !== book.id);
+    setFavorites(updatedFavorites);
+    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+  };
+
+  const isFavorite = book ? favorites.some((fav) => fav.id === book.id) : false;
+
+  const handleFavoriteClick = () => {
+    if (isFavorite) {
+      removeFromFavorites(book);
+    } else {
+      addToFavorites(book);
     }
   };
 
@@ -98,11 +125,11 @@ const BookDetails = () => {
           </Box>
           <HStack>
             <Button
-              leftIcon={liked ? <BsHeartFill /> : <BsHeart />}
-              colorScheme={liked ? "red" : "gray"}
-              onClick={() => setLiked(!liked)}
+              leftIcon={isFavorite ? <BsHeartFill /> : <BsHeart />}
+              colorScheme={isFavorite ? "red" : "gray"}
+              onClick={handleFavoriteClick}
             >
-              {liked ? "Unfavorite" : "Favorite"}
+              {isFavorite ? "Unfavorite" : "Favorite"}
             </Button>
           </HStack>
         </VStack>
