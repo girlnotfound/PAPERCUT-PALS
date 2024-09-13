@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Box, SimpleGrid, useColorModeValue, VStack, Center } from "@chakra-ui/react";
+import { Box, SimpleGrid, useColorModeValue } from "@chakra-ui/react";
 import BookCard from "../components/BookCard";
-import SearchBar from "../components/SearchBar";
 
 const Library = () => {
   const [books, setBooks] = useState([]);
   const [favorites, setFavorites] = useState([]);
-  const [searchParams, setSearchParams] = useState({ query: "", filter: "All" });
 
   const bgGradient = useColorModeValue(
     "linear-gradient(-20deg, #d558c8 0%, #24d292 100%)",
@@ -20,7 +18,7 @@ const Library = () => {
       localStorage.getItem("favorites") || "[]"
     );
     setFavorites(storedFavorites);
-  }, [searchParams]);
+  }, []);
 
   const fetchBooks = async () => {
     try {
@@ -42,13 +40,10 @@ const Library = () => {
 
       const response = await axios.get(url + params.toString());
       setBooks(response.data.items || []);
+
     } catch (error) {
       console.error("Error fetching books:", error);
     }
-  };
-
-  const handleSearch = (query, filter) => {
-    setSearchParams({ query, filter });
   };
 
   const addToFavorites = (book) => {
@@ -65,26 +60,19 @@ const Library = () => {
 
   return (
     <Box p={4} sx={{ background: bgGradient, minHeight: "100vh" }}>
-      <VStack spacing={8} align="stretch">
-        <Center>
-          <Box boxShadow="md" borderRadius="md" overflow="hidden">
-            <SearchBar onSearch={handleSearch} />
-          </Box>
-        </Center>
-        <SimpleGrid columns={[1, 2, 3, 4]} spacing={1}>
-          {books.map((book) => (
-            <BookCard
-              key={book.id}
-              book={book}
-              addToFavorites={addToFavorites}
-              removeFromFavorites={removeFromFavorites}
-              isFavorite={favorites.some((fav) => fav.id === book.id)}
-              imageHeight="440px"
-              boxWidth="300px"
-            />
-          ))}
-        </SimpleGrid>
-      </VStack>
+      <SimpleGrid columns={[1, 2, 3, 4, 5]} spacing={1}>
+        {books.map((book) => (
+          <BookCard
+            key={book.id}
+            book={book}
+            addToFavorites={addToFavorites}
+            removeFromFavorites={removeFromFavorites}
+            isFavorite={favorites.some((fav) => fav.id === book.id)}
+            imageHeight="440px"
+            boxWidth="300px"
+          />
+        ))}
+      </SimpleGrid>
     </Box>
   );
 };
