@@ -22,10 +22,25 @@ const Library = () => {
 
   const fetchBooks = async () => {
     try {
-      const response = await axios.get(
-        "https://www.googleapis.com/books/v1/volumes?q=subject:fiction&orderBy=relevance&maxResults=40"
-      );
-      setBooks(response.data.items);
+      let url = "https://www.googleapis.com/books/v1/volumes?";
+      let params = new URLSearchParams({
+        maxResults: 40,
+        orderBy: "relevance",
+      });
+
+      if (searchParams.filter === "Genre") {
+        params.append("q", `subject:${searchParams.query}`);
+      } else if (searchParams.filter === "Title") {
+        params.append("q", `intitle:${searchParams.query}`);
+      } else if (searchParams.filter === "Author") {
+        params.append("q", `author:${searchParams.query}`);
+      } else {
+        params.append("q", searchParams.query || "subject:fiction");
+      }
+
+      const response = await axios.get(url + params.toString());
+      setBooks(response.data.items || []);
+
     } catch (error) {
       console.error("Error fetching books:", error);
     }

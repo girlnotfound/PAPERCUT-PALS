@@ -9,18 +9,22 @@ import {
   MenuList,
   MenuItem,
   Button,
-  useDisclosure,
+  Portal,
+  Box,
+  useStyleConfig,
 } from "@chakra-ui/react";
 import { ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
 
 const SearchBar = ({ onSearch }) => {
   const [filterOption, setFilterOption] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const menuListStyles = useStyleConfig("Menu", { variant: "unstyled" });
 
   const handleFilterChange = (option) => {
     setFilterOption(option);
-    onClose();
+    setIsOpen(false);
   };
 
   const handleSearchChange = (event) => {
@@ -38,22 +42,25 @@ const SearchBar = ({ onSearch }) => {
     <form onSubmit={handleSubmit}>
       <InputGroup size="lg" width="500px">
         <InputLeftAddon p={0} bg="white">
-          <Menu isOpen={isOpen} onClose={onClose}>
-            <MenuButton
-              as={Button}
-              rightIcon={<ChevronDownIcon />}
-              onClick={onOpen}
-              onMouseEnter={onOpen}
-              onMouseLeave={onClose}
-            >
-              {filterOption}
-            </MenuButton>
-            <MenuList onMouseEnter={onOpen} onMouseLeave={onClose}>
-              <MenuItem onClick={() => handleFilterChange("All")}>All</MenuItem>
-              <MenuItem onClick={() => handleFilterChange("Genre")}>Genre</MenuItem>
-              <MenuItem onClick={() => handleFilterChange("Title")}>Title</MenuItem>
-            </MenuList>
-          </Menu>
+          <Box overflow="visible">
+            <Menu isOpen={isOpen} onClose={() => setIsOpen(false)} placement="bottom-end">
+              <MenuButton
+                as={Button}
+                rightIcon={<ChevronDownIcon />}
+                onClick={() => setIsOpen(!isOpen)}
+              >
+                {filterOption}
+              </MenuButton>
+              <Portal>
+                <MenuList zIndex={1000} sx={{ ...menuListStyles, boxShadow: "none" }}>
+                  <MenuItem onClick={() => handleFilterChange("All")}>All</MenuItem>
+                  <MenuItem onClick={() => handleFilterChange("Genre")}>Genre</MenuItem>
+                  <MenuItem onClick={() => handleFilterChange("Title")}>Title</MenuItem>
+                  <MenuItem onClick={() => handleFilterChange("Author")}>Author</MenuItem>
+                </MenuList>
+              </Portal>
+            </Menu>
+          </Box>
         </InputLeftAddon>
         <Input
           placeholder={`Search by ${filterOption.toLowerCase()}...`}
@@ -76,7 +83,6 @@ const SearchBar = ({ onSearch }) => {
         </InputRightAddon>
       </InputGroup>
     </form>
-  );
-};
+  )}
 
-export default SearchBar;
+  export default SearchBar;
