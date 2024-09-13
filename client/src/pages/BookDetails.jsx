@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import parse from "html-react-parser";
 import {
   Box,
   Heading,
@@ -115,7 +116,12 @@ const BookDetails = () => {
           </HStack>
           <Box>
             <Text fontWeight="bold">Description:</Text>
-            <Text color={textColor}>{book.volumeInfo.description}</Text>
+            {/* added use of parse function to render HTML content */}
+            <Box color={textColor}>
+              {parse(
+                book.volumeInfo.description || "No description available."
+              )}
+            </Box>
           </Box>
           <HStack>
             <Button
