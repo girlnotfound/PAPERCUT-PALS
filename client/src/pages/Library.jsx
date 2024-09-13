@@ -36,6 +36,18 @@ const Library = () => {
     setFavorites(storedFavorites);
   }, [searchParams]);
 
+  if (!AuthService.loggedIn()) {
+    toast({
+      title: "Authentication required",
+      description: "Please log in to access Library",
+      status: "warning",
+      duration: 3000,
+      isClosable: true,
+    });
+      window.location.assign('/signin');
+    return;
+  }
+
   const fetchBooks = async () => {
     try {
       let url = "https://www.googleapis.com/books/v1/volumes?";
@@ -64,16 +76,6 @@ const Library = () => {
   };
 
   const addToFavorites = async (book) => {
-    if (!AuthService.loggedIn()) {
-      toast({
-        title: "Authentication required",
-        description: "Please log in to add favorites.",
-        status: "warning",
-        duration: 3000,
-        isClosable: true,
-      });
-      return;
-    }
   
     try {
 
@@ -89,26 +91,11 @@ const Library = () => {
           genre: book.volumeInfo.categories ? book.volumeInfo.categories.join(", ") : "Uncategorized",
           synopsis: book.volumeInfo.description || "No description available",
           publisher: book.volumeInfo.publisher || "Unknown"
-        },
-        context: {
-          headers: {
-            authorization: `Bearer ${AuthService.getToken()}`
-          }
         }
       });
   
       const addedBook = data.addBook;
       console.log("Book added:", addedBook);
-  
-      // Update favorites state and localStorage
-      const updatedFavorites = [...favorites, addedBook];
-      setFavorites(updatedFavorites);
-      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
-  
-      // Update the token if a new one is returned
-      if (addedBook.token) {
-        AuthService.login(addedBook.token);
-      }
   
       toast({
         title: "Book added to favorites",
@@ -127,6 +114,10 @@ const Library = () => {
         isClosable: true,
       });
     }
+
+    const updatedFavorites = [...favorites, book];
+    setFavorites(updatedFavorites);
+    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
   };
 
   const removeFromFavorites = (book) => {

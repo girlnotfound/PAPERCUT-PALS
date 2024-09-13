@@ -7,18 +7,33 @@ import {
   Skeleton,
   useColorModeValue,
   Image,
+  useToast,
 } from "@chakra-ui/react";
 import BookCard from "../components/BookCard2";
+import AuthService from '../utils/auth';
 
 const BookOfTheMonth = () => {
   const bgGradient = useColorModeValue(
     "linear-gradient(-20deg, #d558c8 0%, #24d292 100%)",
     "linear-gradient(-20deg, #d558c8 0%, #24d292 100%)"
   );
+  const toast = useToast();
   const [books, setBooks] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedBookId, setExpandedBookId] = useState(null);
+
+  if (!AuthService.loggedIn()) {
+    toast({
+      title: "Authentication required",
+      description: "Please log in to access Homepage",
+      status: "warning",
+      duration: 3000,
+      isClosable: true,
+    });
+      window.location.assign('/signin');
+    return;
+  }
 
   useEffect(() => {
     const fetchBooks = async () => {

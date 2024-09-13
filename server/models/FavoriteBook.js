@@ -34,7 +34,7 @@ const favoriteBookSchema = new Schema({
     required: true,
     trim: true, 
   },
-  addedAt: {
+  createdAt: {
     type: Date,
     default: Date.now,
     get: (timestamp) => dateFormat(timestamp),
@@ -54,7 +54,7 @@ const favoriteBookSchema = new Schema({
       createdAt: {
         type: Date,
         default: Date.now,
-        get: (timestamp) => new Date(timestamp).toLocaleString(),
+        get: (timestamp) => dateFormat(timestamp),
       },
     },
   ],
