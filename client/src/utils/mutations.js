@@ -37,3 +37,21 @@ export const ADD_COMMENT = gql`
   }
 `;
 
+
+export const ADD_BOOK = gql`
+  mutation addBook($title: String!, $author: String!, $genre: String!, $synopsis: String!, $publisher: String!) {
+    addBook(title: $title, author: $author, genre: $genre, synopsis: $synopsis, publisher: $publisher) {
+      _id
+      title
+      author
+      genre
+      synopsis
+      publisher
+      createdAt
+      comments {
+        _id
+        commentText
+      }
+    }
+  }
+`;

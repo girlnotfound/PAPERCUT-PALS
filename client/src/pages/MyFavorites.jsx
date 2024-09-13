@@ -17,15 +17,16 @@ export default function MyFavorites() {
     setFavorites(storedFavorites);
   }, []);
 
-  const removeFromFavorites = (book) => {
-    const updatedFavorites = favorites.filter((fav) => fav.id !== book.id);
+  const addToFavorites = (book) => {
+    const updatedFavorites = [...favorites, book];
     setFavorites(updatedFavorites);
     localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
   };
 
-  // This function is not used in MyFavorites, but we need to pass it to BookCard
-  const addToFavorites = (book) => {
-    // Do nothing, as the book is already in favorites
+  const removeFromFavorites = (book) => {
+    const updatedFavorites = favorites.filter((fav) => fav.id !== book.id);
+    setFavorites(updatedFavorites);
+    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
   };
 
   return (
