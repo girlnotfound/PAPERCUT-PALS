@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Box,
@@ -6,6 +6,7 @@ import {
   SimpleGrid,
   Skeleton,
   useColorModeValue,
+  Image,
 } from "@chakra-ui/react";
 import BookCard from "../components/BookCard2";
 
@@ -78,11 +79,31 @@ const BookOfTheMonth = () => {
     localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
   };
 
+  // function to get the appropriate label for each book
+  const getBookLabel = (month) => {
+    switch (month) {
+      case "last":
+        return "Last Month's Pick";
+      case "current":
+        return "This Month's Top Choice";
+      case "next":
+        return "Next Month's Selection";
+      default:
+        return "";
+    }
+  };
+
   return (
     <Box p={4} sx={{ background: bgGradient, minHeight: "100vh" }}>
-      <Heading as="h2" size="xl" mb={6}>
-        Books of the Month
-      </Heading>
+      {/* logo image as heading */}
+      <Box display="flex" justifyContent="center" mb={15}>
+        <Image
+          src="/images/FeaturedBooks_Logo.png"
+          alt="Featured Books of the Month"
+          maxWidth="100%"
+          height="85px"
+        />
+      </Box>
 
       <SimpleGrid columns={[1, null, 3]} spacing={6}>
         {loading
@@ -92,19 +113,27 @@ const BookOfTheMonth = () => {
                 <Skeleton key={index} height="400px" borderRadius="lg" />
               ))
           : books.map((book) => (
-              <BookCard
-                key={book.id}
-                book={book}
-                showComments={expandedBookId === book.id}
-                addToFavorites={addToFavorites}
-                removeFromFavorites={removeFromFavorites}
-                isFavorite={favorites.some((fav) => fav.id === book.id)}
-                onClick={() =>
-                  setExpandedBookId(book.id === expandedBookId ? null : book.id)
-                }
-                imageHeight="440px"
-                boxWidth="300px"
-              />
+              // wrap BookCard in Box with label
+              <Box key={book.id}>
+                {/* add book label as heading */}
+                <Heading as="h3" size="md" mb={1} textAlign="center">
+                  {getBookLabel(book.month)}
+                </Heading>
+                <BookCard
+                  book={book}
+                  showComments={expandedBookId === book.id}
+                  addToFavorites={addToFavorites}
+                  removeFromFavorites={removeFromFavorites}
+                  isFavorite={favorites.some((fav) => fav.id === book.id)}
+                  onClick={() =>
+                    setExpandedBookId(
+                      book.id === expandedBookId ? null : book.id
+                    )
+                  }
+                  imageHeight="440px"
+                  boxWidth="300px"
+                />
+              </Box>
             ))}
       </SimpleGrid>
     </Box>
