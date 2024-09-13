@@ -105,9 +105,9 @@ footer {
 
 /* base styles for UserProfile.jsx */
 .user-profile-page {
-  background-color: #f0f0f0;
+  background-color: #edf2f7;
   min-height: 100vh;
-  padding: 20px;
+  padding: 10px;
   font-family: Arial, sans-serif;
   display: flex;
   flex-direction: column;
@@ -148,21 +148,23 @@ footer {
 .centered-form-item input[type="email"],
 .centered-form-item textarea {
   width: 100%;
-  padding: 10px;
+  padding: 5px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 15px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   font-size: 16px;
   margin-top: 5px;
+  text-align: center;
 }
 
 .centered-form-item textarea {
-  height: 100px;
+  height: 50px;
   resize: vertical;
+  text-align: left;
 }
 
 button {
-  background-color: #007bff;
+  background-color: #edf2f7;
   color: white;
   padding: 10px 15px;
   border: none;
@@ -173,7 +175,8 @@ button {
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #00b306;
+  color: white;
 }
 
 .button-container {
@@ -186,7 +189,7 @@ button:hover {
 }
 
 .profile-button {
-  background-color: #007bff;
+  background-color: #a977bb;
   color: white;
   padding: 12px 20px;
   border: none;
@@ -203,7 +206,7 @@ button:hover {
 }
 
 .profile-button:hover {
-  background-color: #0056b3;
+  background-color: #c464c3;
   transform: translateY(-2px);
 }
 
@@ -212,9 +215,9 @@ button:hover {
 }
 
 .profile-button.upload {
-  background-color: #28a745; /* Green color for upload button */
+  background-color: #60a8a4; /* Green color for upload button */
 }
 
 .profile-button.upload:hover {
-  background-color: #218838;
+  background-color: #34c897;
 }

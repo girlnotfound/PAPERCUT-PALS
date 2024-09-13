@@ -51,7 +51,7 @@ const UserProfile = () => {
       <h2 className="header">User Profile</h2>
       <div className="form-item centered-form-item">
         <label>
-          Username:
+          Username
           <input
             type="text"
             value={username}
@@ -61,7 +61,7 @@ const UserProfile = () => {
       </div>
       <div className="form-item centered-form-item">
         <label>
-          Email:
+          Email
           <input
             type="email"
             value={email}
@@ -71,7 +71,7 @@ const UserProfile = () => {
       </div>
       <div className="form-item centered-form-item">
         <label>
-          Bio:
+          Bio
           <textarea
             value={bio}
             onChange={(e) => setBio(e.target.value)}

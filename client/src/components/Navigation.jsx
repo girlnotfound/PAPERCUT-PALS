@@ -55,7 +55,14 @@ export default function Navigation() {
 
   return (
     <>
-      <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
+      <Box 
+        bg={useColorModeValue('gray.100', 'gray.900')} 
+        px={4}
+        borderTopWidth="1px"
+        borderBottomWidth="1px"
+        borderColor="gray.600"
+        borderStyle="solid"
+      >
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             size={'md'}
@@ -72,30 +79,45 @@ export default function Navigation() {
             </HStack>
           </HStack>
           <Flex alignItems={'center'}>
-            <Menu>
-              <MenuButton
-                as={Button}
-                rounded={'full'}
-                variant={'link'}
-                cursor={'pointer'}
-                minW={0}>
-                <Avatar
-                  size={'sm'}
-                  src={
-                    'https://avatars.githubusercontent.com/u/5844161?v=4'
-                  }
-                />
-                
-              </MenuButton>
-              <MenuList>
-              <MenuItem>
-  <NavLink to="/UserProfile">Profile</NavLink>
-</MenuItem>
-                <MenuDivider />
-                <MenuItem onClick={Auth.logout}>Logout</MenuItem>
-              </MenuList>
-            </Menu>
-          </Flex>
+  <Menu>
+    <MenuButton
+      as={Button}
+      rounded={'full'}
+      variant={'link'}
+      cursor={'pointer'}
+      minW={0}
+      _hover={{ bg: 'transparent' }} // Keep the button transparent on hover
+    >
+      <Avatar
+        size={'sm'}
+        src={
+          'https://avatars.githubusercontent.com/u/5844161?v=4'
+        }
+      />
+    </MenuButton>
+    <MenuList>
+      <MenuItem 
+        as={RouterLink} 
+        to="/UserProfile" 
+        width="100%" 
+        _hover={{ 
+          bg: '#898cb0',
+          color: 'white' // Change text color to white on hover
+        }}
+      >
+        Profile
+      </MenuItem>
+      <MenuDivider />
+      <MenuItem 
+        onClick={Auth.logout} 
+        width="100%" 
+        _hover={{ bg: '#898cb0' }}
+      >
+        Logout
+      </MenuItem>
+    </MenuList>
+  </Menu>
+</Flex>
         </Flex>
 
         {isOpen ? (
