@@ -56,6 +56,7 @@ const SearchBar = ({ onSearch }) => {
                   <MenuItem onClick={() => handleFilterChange("All")}>All</MenuItem>
                   <MenuItem onClick={() => handleFilterChange("Genre")}>Genre</MenuItem>
                   <MenuItem onClick={() => handleFilterChange("Title")}>Title</MenuItem>
+                  <MenuItem onClick={() => handleFilterChange("Author")}>Author</MenuItem>
                 </MenuList>
               </Portal>
             </Menu>

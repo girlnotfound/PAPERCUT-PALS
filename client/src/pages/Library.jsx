@@ -34,6 +34,8 @@ const Library = () => {
         params.append("q", `subject:${searchParams.query}`);
       } else if (searchParams.filter === "Title") {
         params.append("q", `intitle:${searchParams.query}`);
+      } else if (searchParams.filter === "Author") {
+        params.append("q", `author:${searchParams.query}`);
       } else {
         params.append("q", searchParams.query || "subject:fiction");
       }
