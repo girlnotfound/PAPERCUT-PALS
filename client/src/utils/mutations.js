@@ -24,3 +24,16 @@ export const LOGIN_USER = gql`
   }
 `;
 
+
+export const ADD_COMMENT = gql`
+  mutation addComment($favoriteBookId: ID!, $commentText: String!) {
+    addComment(favoriteBookId: $favoriteBookId, commentText: $commentText) {
+      comments {
+        _id
+        commentText
+        createdAt
+      }
+    }
+  }
+`;
+
