@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import parse from "html-react-parser";
 import {
   Box,
   Heading,
@@ -23,6 +24,14 @@ const BookDetails = () => {
   const [favorites, setFavorites] = useState([]);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+
+  const bgColor = useColorModeValue("white", "gray.800");
+  const textColor = useColorModeValue("gray.600", "gray.200");
+  const borderColor = useColorModeValue("gray.200", "gray.700");
+  const boxShadow = useColorModeValue(
+    "10px 10px 0 #323535",
+    "10px 10px 0 cyan"
+  );
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -72,10 +81,6 @@ const BookDetails = () => {
     }
   };
 
-  const bgColor = useColorModeValue("white", "gray.800");
-  const textColor = useColorModeValue("gray.600", "gray.200");
-  const borderColor = useColorModeValue("gray.200", "gray.700");
-
   if (!book) return <Box>Loading...</Box>;
 
   return (
@@ -92,10 +97,7 @@ const BookDetails = () => {
             w="full"
             h="500px"
             borderRadius="md"
-            boxShadow={useColorModeValue(
-              "10px 10px 0 #323535",
-              "10px 10px 0 cyan"
-            )}
+            boxShadow={boxShadow}
           />
         </Box>
         <VStack flex={2} align="start" spacing={4}>
@@ -115,7 +117,11 @@ const BookDetails = () => {
           </HStack>
           <Box>
             <Text fontWeight="bold">Description:</Text>
-            <Text color={textColor}>{book.volumeInfo.description}</Text>
+            <Box color={textColor}>
+              {parse(
+                book.volumeInfo.description || "No description available."
+              )}
+            </Box>
           </Box>
           <HStack>
             <Button
@@ -132,7 +138,7 @@ const BookDetails = () => {
       <Divider my={8} />
 
       <Box>
-        <Heading size="lg" mb={4}>
+        <Heading size="lg" mb={4} textAlign="center">
           Comments
         </Heading>
         <VStack spacing={4} align="stretch">
@@ -154,7 +160,12 @@ const BookDetails = () => {
             placeholder="Add a comment..."
             size="sm"
           />
-          <Button onClick={handleAddComment} colorScheme="blue">
+          <Button
+            onClick={handleAddComment}
+            bg="#97cba9"
+            color="white"
+            _hover={{ bg: "#7ab08e" }}
+          >
             Add Comment
           </Button>
         </VStack>
