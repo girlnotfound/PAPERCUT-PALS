@@ -6,22 +6,28 @@ import {
   useColorModeValue,
   VStack,
   Center,
+  useToast,
 } from "@chakra-ui/react";
 import BookCard from "../components/BookCard";
 import { ADD_BOOK } from '../utils/mutations';
 import { useMutation } from '@apollo/client';
 import SearchBar from "../components/SearchBar";
+import AuthService from '../utils/auth';
+
 const Library = () => {
   const [books, setBooks] = useState([]);
   const [favorites, setFavorites] = useState([]);
+  const toast = useToast();
   const [searchParams, setSearchParams] = useState({
     query: "",
     filter: "All",
-  });  const [addBook] = useMutation(ADD_BOOK);
+  });  
+  const [addBook] = useMutation(ADD_BOOK);
   const bgGradient = useColorModeValue(
     "linear-gradient(-20deg, #D558C8 0%, #24D292 100%)",
     "linear-gradient(-20deg, #D558C8 0%, #24D292 100%)"
   );
+
   useEffect(() => {
     fetchBooks();
     const storedFavorites = JSON.parse(
@@ -29,6 +35,7 @@ const Library = () => {
     );
     setFavorites(storedFavorites);
   }, [searchParams]);
+
   const fetchBooks = async () => {
     try {
       let url = "https://www.googleapis.com/books/v1/volumes?";
@@ -51,42 +58,83 @@ const Library = () => {
       console.error("Error fetching books:", error);
     }
   };
+
   const handleSearch = (query, filter) => {
     setSearchParams({ query, filter });
   };
+
   const addToFavorites = async (book) => {
-    const updatedFavorites = [...favorites, book];
-    setFavorites(updatedFavorites);
-    console.log(updatedFavorites.map(book => book.volumeInfo));
+    if (!AuthService.loggedIn()) {
+      toast({
+        title: "Authentication required",
+        description: "Please log in to add favorites.",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
   
     try {
-      await Promise.all(updatedFavorites.map(async (book) => {
-        console.log(book.volumeInfo.title);
-        console.log(book.volumeInfo.authors.join(", "));
-        console.log(book.volumeInfo.categories.join(", "));
-        console.log(book.volumeInfo.description);
-        console.log(book.volumeInfo.publisher);
-        const { data } = await addBook({
-          variables: {
-            title: book.volumeInfo.title,
-            author: book.volumeInfo.authors ? book.volumeInfo.authors.join(", ") : "Unknown",
-            genre: book.volumeInfo.categories ? book.volumeInfo.categories.join(", ") : "Uncategorized",
-            synopsis: book.volumeInfo.description || "No description available",
-            publisher: book.volumeInfo.publisher || "Unknown"
+
+      console.log(book.volumeInfo.title);
+      console.log(book.volumeInfo.authors.join(", "));
+      console.log(book.volumeInfo.categories.join(", "));
+      console.log(book.volumeInfo.description);
+      console.log(book.volumeInfo.publisher);
+      const { data } = await addBook({
+        variables: {
+          title: book.volumeInfo.title,
+          author: book.volumeInfo.authors ? book.volumeInfo.authors.join(", ") : "Unknown",
+          genre: book.volumeInfo.categories ? book.volumeInfo.categories.join(", ") : "Uncategorized",
+          synopsis: book.volumeInfo.description || "No description available",
+          publisher: book.volumeInfo.publisher || "Unknown"
+        },
+        context: {
+          headers: {
+            authorization: `Bearer ${AuthService.getToken()}`
           }
-        });
-        console.log("Book added:", data.addBook);
-      }));
+        }
+      });
+  
+      const addedBook = data.addBook;
+      console.log("Book added:", addedBook);
+  
+      // Update favorites state and localStorage
+      const updatedFavorites = [...favorites, addedBook];
+      setFavorites(updatedFavorites);
       localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+  
+      // Update the token if a new one is returned
+      if (addedBook.token) {
+        AuthService.login(addedBook.token);
+      }
+  
+      toast({
+        title: "Book added to favorites",
+        description: "The book has been successfully added to your favorites.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
     } catch (error) {
-      console.error("Error adding books to favorites:", error);
+      console.error("Error adding book to favorites:", error);
+      toast({
+        title: "Error",
+        description: "There was an error adding the book to favorites. Please try again.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
+
   const removeFromFavorites = (book) => {
     const updatedFavorites = favorites.filter((fav) => fav.id !== book.id);
     setFavorites(updatedFavorites);
     localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
   };
+
   return (
     <Box p={4} sx={{ background: bgGradient, minHeight: "100vh" }}>
       <VStack spacing={8} align="stretch">
@@ -112,4 +160,5 @@ const Library = () => {
     </Box>
   );
 };
+
 export default Library;
