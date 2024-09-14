@@ -34,7 +34,7 @@ const favoriteBookSchema = new Schema({
     required: true,
     trim: true, 
   },
-  addedAt: {
+  createdAt: {
     type: Date,
     default: Date.now,
     get: (timestamp) => dateFormat(timestamp),

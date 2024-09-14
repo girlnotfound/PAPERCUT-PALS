@@ -14,3 +14,33 @@ export const QUERY_USER = gql`
     }
   }
 `;
+
+export const QUERY_USERS = gql`
+  query users {
+    users {
+      _id
+      username
+      email
+      thoughts {
+        _id
+        thoughtText
+        createdAt
+      }
+    }
+  }
+`;
+
+export const QUERY_BOOKS = gql`
+  query getBooks {
+    favoriteBooks {
+      _id
+      favoredBy
+      title
+      author
+      thoughtText
+      thoughtAuthor
+      createdAt
+    }
+  }
+`;
+

@@ -15,7 +15,7 @@ const typeDefs = `
     genre: String
     synopsis: String
     publisher: String
-    addedAt: String
+    createdAt: String
     comments: [Comment]!
   }
 
@@ -42,7 +42,7 @@ const typeDefs = `
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
-    addFavoriteBook(title: String!, author: String!, genre: String!, synopsis: String!, publisher: String! ): FavoriteBook
+    addBook(title: String!, author: String!, genre: String!, synopsis: String!, publisher: String! ): FavoriteBook
     addComment(favoriteBookId: ID!, commentText: String!): FavoriteBook
     unFavoriteBook(favoriteBookId: ID!): FavoriteBook
     removeComment(favoriteBookId: ID!, commentId: ID!): FavoriteBook
