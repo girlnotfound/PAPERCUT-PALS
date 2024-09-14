@@ -105,7 +105,7 @@ const BookOfTheMonth = () => {
         />
       </Box>
 
-      <SimpleGrid columns={[1, null, 3]} spacing={6}>
+      <SimpleGrid columns={[1, null, 3]} spacing={0}>
         {loading
           ? Array(3)
               .fill(0)
@@ -114,9 +114,9 @@ const BookOfTheMonth = () => {
               ))
           : books.map((book) => (
               // wrap BookCard in Box with label
-              <Box key={book.id}>
+              <Box key={book.id} margin={0} padding={0}>
                 {/* add book label as heading */}
-                <Heading as="h3" size="md" mb={1} textAlign="center">
+                <Heading as="h3" size="md" mb={0} textAlign="center">
                   {getBookLabel(book.month)}
                 </Heading>
                 <BookCard
