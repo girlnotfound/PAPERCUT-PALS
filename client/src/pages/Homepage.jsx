@@ -10,7 +10,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import BookCard from "../components/BookCard2";
-import AuthService from '../utils/auth';
+import AuthService from "../utils/auth";
 
 const BookOfTheMonth = () => {
   const bgGradient = useColorModeValue(
@@ -23,19 +23,19 @@ const BookOfTheMonth = () => {
   const [loading, setLoading] = useState(true);
   const [expandedBookId, setExpandedBookId] = useState(null);
 
-  if (!AuthService.loggedIn()) {
-    toast({
-      title: "Authentication required",
-      description: "Please log in to access Homepage",
-      status: "warning",
-      duration: 3000,
-      isClosable: true,
-    });
-      window.location.assign('/signin');
-    return;
-  }
-
   useEffect(() => {
+    if (!AuthService.loggedIn()) {
+      toast({
+        title: "Authentication required",
+        description: "Please log in to access Homepage",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+      window.location.assign("/signin");
+      return;
+    }
+
     const fetchBooks = async () => {
       setLoading(true);
       const months = ["last", "current", "next"];
@@ -80,7 +80,7 @@ const BookOfTheMonth = () => {
       localStorage.getItem("favorites") || "[]"
     );
     setFavorites(storedFavorites);
-  }, []);
+  }, [toast]); // added toast to the dependency array
 
   const addToFavorites = (book) => {
     const updatedFavorites = [...favorites, book];

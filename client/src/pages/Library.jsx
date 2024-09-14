@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Box,
@@ -9,10 +9,10 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import BookCard from "../components/BookCard";
-import { ADD_BOOK } from '../utils/mutations';
-import { useMutation } from '@apollo/client';
+import { ADD_BOOK } from "../utils/mutations";
+import { useMutation } from "@apollo/client";
 import SearchBar from "../components/SearchBar";
-import AuthService from '../utils/auth';
+import AuthService from "../utils/auth";
 
 const Library = () => {
   const [books, setBooks] = useState([]);
@@ -21,7 +21,7 @@ const Library = () => {
   const [searchParams, setSearchParams] = useState({
     query: "",
     filter: "All",
-  });  
+  });
   const [addBook] = useMutation(ADD_BOOK);
   const bgGradient = useColorModeValue(
     "linear-gradient(-20deg, #D558C8 0%, #24D292 100%)",
@@ -44,7 +44,7 @@ const Library = () => {
       duration: 3000,
       isClosable: true,
     });
-      window.location.assign('/signin');
+    window.location.assign("/signin");
     return;
   }
 
@@ -76,9 +76,7 @@ const Library = () => {
   };
 
   const addToFavorites = async (book) => {
-  
     try {
-
       console.log(book.volumeInfo.title);
       console.log(book.volumeInfo.authors.join(", "));
       console.log(book.volumeInfo.categories.join(", "));
@@ -88,16 +86,20 @@ const Library = () => {
         variables: {
           favoredBy: AuthService.getProfile().data.username,
           title: book.volumeInfo.title,
-          author: book.volumeInfo.authors ? book.volumeInfo.authors.join(", ") : "Unknown",
-          genre: book.volumeInfo.categories ? book.volumeInfo.categories.join(", ") : "Uncategorized",
+          author: book.volumeInfo.authors
+            ? book.volumeInfo.authors.join(", ")
+            : "Unknown",
+          genre: book.volumeInfo.categories
+            ? book.volumeInfo.categories.join(", ")
+            : "Uncategorized",
           synopsis: book.volumeInfo.description || "No description available",
-          publisher: book.volumeInfo.publisher || "Unknown"
-        }
+          publisher: book.volumeInfo.publisher || "Unknown",
+        },
       });
-  
+
       const addedBook = data.addBook;
       console.log("Book added:", addedBook);
-  
+
       toast({
         title: "Book added to favorites",
         description: "The book has been successfully added to your favorites.",
@@ -109,7 +111,8 @@ const Library = () => {
       console.error("Error adding book to favorites:", error);
       toast({
         title: "Error",
-        description: "There was an error adding the book to favorites. Please try again.",
+        description:
+          "There was an error adding the book to favorites. Please try again.",
         status: "error",
         duration: 3000,
         isClosable: true,
