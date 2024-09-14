@@ -86,6 +86,7 @@ const Library = () => {
       console.log(book.volumeInfo.publisher);
       const { data } = await addBook({
         variables: {
+          favoredBy: AuthService.getProfile().data.username,
           title: book.volumeInfo.title,
           author: book.volumeInfo.authors ? book.volumeInfo.authors.join(", ") : "Unknown",
           genre: book.volumeInfo.categories ? book.volumeInfo.categories.join(", ") : "Uncategorized",

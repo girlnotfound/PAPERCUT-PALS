@@ -29,3 +29,18 @@ export const QUERY_USERS = gql`
     }
   }
 `;
+
+export const QUERY_BOOKS = gql`
+  query getBooks {
+    favoriteBooks {
+      _id
+      favoredBy
+      title
+      author
+      thoughtText
+      thoughtAuthor
+      createdAt
+    }
+  }
+`;
+
