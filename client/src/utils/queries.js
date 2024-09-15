@@ -69,3 +69,15 @@ export const QUERY_BOOK = gql`
     }
   }
 `;
+
+export const QUERY_FAVORITEBOOKS = gql`
+  query getFavoriteBooks($username: String!) {
+    favoriteBooks(username: $username) {
+      _id
+      username
+      email
+      favoriteBooks {
+        _id
+      }
+  }
+`;

@@ -35,8 +35,9 @@ const typeDefs = `
   type Query {
     users: [User]
     user(username: String!): User
-    favoriteBooks(username: String): [Book]
-    getBook(bookId: ID!): Book
+    favoriteBooks(username: String): User
+    book(bookId: ID!): Book
+    books: [Book]
     me: User
   }
 
@@ -45,8 +46,8 @@ const typeDefs = `
     login(email: String!, password: String!): Auth
     addBook(title: String!, imageLink: String!, author: String!, genre: String!, synopsis: String!, publisher: String!, published: String ): Book
     addComment(bookId: String!, commentText: String!): Book
-    favoriteBook(favoriteBookId: String!): Book
-    unFavoriteBook(favoriteBookId: String!): Book
+    favoriteBook(favoriteBookId: String!): User
+    unFavoriteBook(favoriteBookId: String!): User
     deleteBook(bookId: String!): Book
     removeComment(bookId: String!, commentId: ID!): Book
   }

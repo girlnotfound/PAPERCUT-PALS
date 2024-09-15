@@ -17,9 +17,9 @@ const resolvers = {
     },
     favoriteBooks: async (parent, args, context) => {
       if (context.user) {
-        return User.find({ _id: context.user._id }).populate('favoriteBooks');
+        return User.findOne({ _id: context.user._id }).populate('favoriteBooks');
       }
-      throw AuthenticationError;
+      throw new AuthenticationError('You need to be logged in!');
     },
   },
 
@@ -33,7 +33,7 @@ const resolvers = {
       const user = await User.findOne({ email });
 
       if (!user) {
-        throw AuthenticationError;
+        throw new AuthenticationError('You need to be logged in!');
       }
 
       const correctPw = await user.isCorrectPassword(password);
@@ -58,16 +58,10 @@ const resolvers = {
           publisher,
           published
         });
-
-        await User.findOneAndUpdate(
-          { _id: context.user._id },
-          { $addToSet: { favoriteBooks: favoriteBook._id } }
-        );
-
         return book;
       }
-      throw AuthenticationError;
-      ('You need to be logged in!');
+      throw new AuthenticationError('You need to be logged in!');
+      
     },
     deleteBook: async (parent, { bookId }, context) => {
       if (context.user) {
@@ -82,8 +76,7 @@ const resolvers = {
 
         return book;
       }
-      throw AuthenticationError;
-      ('You need to be logged in!');
+      throw new AuthenticationError('You need to be logged in!');
     },
 
 
@@ -103,8 +96,7 @@ const resolvers = {
           }
         );
       }
-      throw AuthenticationError;
-      ('You need to be logged in!');
+      throw new AuthenticationError('You need to be logged in!');
     },
     unFavoriteBook: async (parent, { favoriteBookId }, context) => {
       if (context.user) {
@@ -115,8 +107,7 @@ const resolvers = {
 
         return favoriteBook;
       }
-      throw AuthenticationError;
-      ('You need to be logged in!');
+      throw new AuthenticationError('You need to be logged in!');
     },
 
     favoriteBook: async (parent, { favoriteBookId }, context) => {
@@ -128,8 +119,7 @@ const resolvers = {
 
         return favoriteBook;
       }
-      throw AuthenticationError;
-      ('You need to be logged in!');
+      throw new AuthenticationError('You need to be logged in!');
     },
     
     removeComment: async (parent, { bookId, commentId }, context) => {
@@ -147,8 +137,7 @@ const resolvers = {
           { new: true }
         );
       }
-      throw AuthenticationError;
-      ('You need to be logged in!');
+      throw new AuthenticationError('You need to be logged in!');
     },
   },
 };

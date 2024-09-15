@@ -4,7 +4,7 @@ const dateFormat = require('../utils/dateFormat');
 const bookSchema = new Schema({
   _id: {
     type: String,
-    required,
+    required: 'ID is required!',
     trim: true
   },
   title: {
