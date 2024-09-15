@@ -1,17 +1,22 @@
 const { Schema, model } = require('mongoose');
 const dateFormat = require('../utils/dateFormat');
 
-const favoriteBookSchema = new Schema({
-  favoredBy: {
+const bookSchema = new Schema({
+  _id: {
     type: String,
-    required: true,
-    trim: true,
+    required,
+    trim: true
   },
   title: {
     type: String,
     required: 'You need to have a title!',
     minlength: 1,
     maxlength: 280,
+    trim: true,
+  },
+  imageLink:{
+    type: String,
+    required: 'You need to have an imageLink',
     trim: true,
   },
   author: {
@@ -24,7 +29,7 @@ const favoriteBookSchema = new Schema({
     required: true,
     trim: true,
   },
-  synopsis: {
+  description: {
     type: String,
     required: true,
     trim: true,
@@ -32,6 +37,10 @@ const favoriteBookSchema = new Schema({
   publisher: {
     type: String,
     required: true,
+    trim: true, 
+  },
+  published: {
+    type: String,
     trim: true, 
   },
   createdAt: {
@@ -60,6 +69,6 @@ const favoriteBookSchema = new Schema({
   ],
 });
 
-const FavoriteBook = model('FavoriteBook', favoriteBookSchema);
+const Book = model('Book', bookSchema);
 
-module.exports = FavoriteBook;
+module.exports = Book;
