@@ -9,16 +9,15 @@ const resolvers = {
     user: async (parent, { username }) => {
       return User.findOne({ username }).populate('favoriteBooks');
     },
-    books: async (parent, { username }) => {
-      const params = username ? { username } : {};
-      return Book.find(params).sort({ createdAt: -1 });
+    books: async (parent, {}) => {
+      return Book.find({}).sort({ createdAt: -1 });
     },
     book: async (parent, { bookId }) => {
       return Book.findOne({ _id: bookId });
     },
-    favoriteBook: async (parent, args, context) => {
+    favoriteBooks: async (parent, args, context) => {
       if (context.user) {
-        return User.findOne({ _id: context.user._id }).populate('favoriteBooks');
+        return User.find({ _id: context.user._id }).populate('favoriteBooks');
       }
       throw AuthenticationError;
     },
@@ -109,12 +108,12 @@ const resolvers = {
     },
     unFavoriteBook: async (parent, { favoriteBookId }, context) => {
       if (context.user) {
-          await User.findOneAndUpdate(
+          const favoriteBook = await User.findOneAndUpdate(
           { _id: context.user._id },
           { $pull: { favoriteBooks: favoriteBookId } }
         );
 
-        return thought;
+        return favoriteBook;
       }
       throw AuthenticationError;
       ('You need to be logged in!');

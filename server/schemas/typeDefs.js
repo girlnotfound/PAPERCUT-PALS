@@ -36,7 +36,7 @@ const typeDefs = `
     users: [User]
     user(username: String!): User
     favoriteBooks(username: String): [Book]
-    getSingleBook(bookId: ID!): Book
+    getBook(bookId: ID!): Book
     me: User
   }
 
@@ -45,6 +45,7 @@ const typeDefs = `
     login(email: String!, password: String!): Auth
     addBook(title: String!, imageLink: String!, author: String!, genre: String!, synopsis: String!, publisher: String!, published: String ): Book
     addComment(bookId: String!, commentText: String!): Book
+    favoriteBook(favoriteBookId: String!): Book
     unFavoriteBook(favoriteBookId: String!): Book
     deleteBook(bookId: String!): Book
     removeComment(bookId: String!, commentId: ID!): Book
