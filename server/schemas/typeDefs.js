@@ -4,17 +4,18 @@ const typeDefs = `
     username: String
     email: String
     password: String
-    favoriteBooks: [FavoriteBook]!
+    favoriteBooks: [Book]!
   }
 
-  type FavoriteBook {
-    _id: ID
-    favoredBy: String
+  type Book {
+    _id: String
     title: String
+    imageLink: String
     author: String
     genre: String
-    synopsis: String
+    description: String
     publisher: String
+    published: String
     createdAt: String
     comments: [Comment]!
   }
@@ -34,18 +35,19 @@ const typeDefs = `
   type Query {
     users: [User]
     user(username: String!): User
-    favoriteBooks(username: String): [FavoriteBook]
-    favoriteBook(favoriteBookId: ID!): FavoriteBook
+    favoriteBooks(username: String): [Book]
+    getSingleBook(bookId: ID!): Book
     me: User
   }
 
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
-    addBook(title: String!, author: String!, genre: String!, synopsis: String!, publisher: String! ): FavoriteBook
-    addComment(favoriteBookId: ID!, commentText: String!): FavoriteBook
-    unFavoriteBook(favoriteBookId: ID!): FavoriteBook
-    removeComment(favoriteBookId: ID!, commentId: ID!): FavoriteBook
+    addBook(title: String!, imageLink: String!, author: String!, genre: String!, synopsis: String!, publisher: String!, published: String ): Book
+    addComment(bookId: String!, commentText: String!): Book
+    unFavoriteBook(favoriteBookId: String!): Book
+    deleteBook(bookId: String!): Book
+    removeComment(bookId: String!, commentId: ID!): Book
   }
 `;
 
