@@ -1,9 +1,8 @@
 const db = require('../config/connection');
 const { User, Book } = require('../models');
-const userSeeds = require('./userSeeds.json');
-const favoriteBookSeeds = require('./favoriteBookSeeds.json');
 const cleanDB = require('./cleanDB');
 const axios = require('axios');
+const bcrypt = require('bcrypt');
 
 const fetchBooks = async (genre) => {
   try {
@@ -25,10 +24,77 @@ const fetchBooks = async (genre) => {
       description: book.volumeInfo.description || 'No description available',
       publisher: book.volumeInfo.publisher || 'Unknown Publisher',
       published: book.volumeInfo.publishedDate || 'Unknown',
+      comments: []
     }));
   } catch (error) {
     console.error('Error fetching books:', error);
     return [];
+  }
+};
+
+const createMockUsers = async () => {
+  const mockUsers = [
+    { username: 'JohnDoe', email: 'john@example.com', password: 'password123' },
+    { username: 'JaneSmith', email: 'jane@example.com', password: 'password456' },
+    { username: 'BookLover', email: 'booklover@example.com', password: 'ilovebooks' },
+    { username: 'AliceWonder', email: 'alice@example.com', password: 'wonderland' },
+    { username: 'BobBuilder', email: 'bob@example.com', password: 'canwefixit' },
+    { username: 'CharlieBrown', email: 'charlie@example.com', password: 'snoopy' },
+    { username: 'DaisyFlower', email: 'daisy@example.com', password: 'petals' },
+    { username: 'EveExplorer', email: 'eve@example.com', password: 'adventure' },
+    { username: 'FrankSinatra', email: 'frank@example.com', password: 'myway' },
+    { username: 'GraceHopper', email: 'grace@example.com', password: 'compiler' }
+  ];
+
+  const createdUsers = [];
+
+  for (const user of mockUsers) {
+    const newUser = await User.create({
+      username: user.username,
+      email: user.email,
+      password: user.password
+    });
+    createdUsers.push(newUser);
+  }
+
+  return createdUsers;
+};
+
+const addMockComments = async (books, users) => {
+  const mockComments = [
+    "Great read! Couldn't put it down.",
+    "Highly recommended for fans of the genre.",
+    "The characters were well-developed and relatable.",
+    "An intriguing plot that kept me guessing until the end.",
+    "Beautiful prose and vivid descriptions throughout.",
+    "A thought-provoking book that challenges conventional wisdom.",
+    "Not my favorite, but still an enjoyable read.",
+    "The author's unique perspective shines through in every chapter.",
+    "A perfect balance of humor and drama.",
+    "I found myself completely immersed in the story world.",
+    "The pacing was a bit slow for my taste, but the ending was worth it.",
+    "A masterpiece that will stay with me for a long time.",
+    "Interesting concept, but the execution fell short in some areas.",
+    "The dialogue felt authentic and brought the characters to life.",
+    "A page-turner that had me up all night reading.",
+    "The themes explored in this book are both timely and timeless.",
+    "While not groundbreaking, it's a solid addition to the genre.",
+    "I appreciated the author's attention to historical detail.",
+    "The plot twists were unexpected and brilliantly executed.",
+    "A comfort read that I'll return to again and again."
+  ];
+
+  for (const book of books) {
+    for (let i = 0; i < 3; i++) {
+      const randomUser = users[Math.floor(Math.random() * users.length)];
+      const randomComment = mockComments[Math.floor(Math.random() * mockComments.length)];
+      book.comments.push({
+        commentAuthor: randomUser.username,
+        commentText: randomComment,
+        createdAt: new Date(Date.now() - Math.floor(Math.random() * 30 * 24 * 60 * 60 * 1000))
+      });
+    }
+    await book.save();
   }
 };
 
@@ -38,16 +104,32 @@ db.once('open', async () => {
     await cleanDB('User', 'users');
 
     const genres = ['fiction', 'nonfiction', 'romance', 'horror', 'fantasy', 'adventure', 'biographies'];
+    let allBooks = [];
 
     for (let i = 0; i < genres.length; i++) {
       const data = await fetchBooks(genres[i]);
-      await Book.create(data);
+      const createdBooks = await Book.create(data);
+      allBooks = allBooks.concat(createdBooks);
     }
 
-    console.log('all done!');
+    const users = await createMockUsers();
+    await addMockComments(allBooks, users);
+
+    // Add favorite books to users
+    for (const user of users) {
+      const numberOfFavorites = Math.floor(Math.random() * 5) + 1; // 1 to 5 favorite books
+      const favoriteBooks = allBooks
+        .sort(() => 0.5 - Math.random())
+        .slice(0, numberOfFavorites)
+        .map(book => book._id);
+      user.favoriteBooks = favoriteBooks;
+      await user.save();
+    }
+
+    console.log('Seeding completed successfully!');
     process.exit(0);
   } catch (err) {
-    console.error(err);
+    console.error('Error during seeding:', err);
     process.exit(1);
   }
 });
