@@ -36,7 +36,7 @@ const typeDefs = `
     users: [User]
     user(username: String!): User
     favoriteBooks(username: String): User
-    book(bookId: ID!): Book
+    book(bookId: String!): Book
     books: [Book]
     me: User
   }
