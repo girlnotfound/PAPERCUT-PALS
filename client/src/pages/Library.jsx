@@ -112,10 +112,41 @@ const Library = () => {
     localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
   };
 
-  const removeFromFavorites = (book) => {
+  const removeFromFavorites = async (book) => {
     const updatedFavorites = favorites.filter((fav) => fav.id !== book.id);
+    
     setFavorites(updatedFavorites);
     localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+
+    try {
+      console.log(book);
+      const { data } = await unFavoriteBook({
+        variables: {
+          favoriteBookId: book.id
+        },
+      });
+
+      const addedBook = data.favoriteBook;
+      console.log("Book unfavorited:", addedBook);
+
+      toast({
+        title: "Book unfavorited",
+        description: "The book has been successfully removed your favorites.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error("Error adding book to favorites:", error);
+      toast({
+        title: "Error",
+        description:
+          "There was an error removing the book to favorites. Please try again.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   return (

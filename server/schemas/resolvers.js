@@ -100,24 +100,30 @@ const resolvers = {
     },
     unFavoriteBook: async (parent, { favoriteBookId }, context) => {
       if (context.user) {
-          const favoriteBook = await User.findOneAndUpdate(
+          await User.findOneAndUpdate(
           { _id: context.user._id },
-          { $pull: { favoriteBooks: favoriteBookId } }
+          { $pull: { favoriteBooks: favoriteBookId } },
+          { new: true }
         );
 
-        return favoriteBook;
+        const updatedUser = await User.findById(context.user._id).populate('favoriteBooks');
+    
+        return updatedUser;
       }
       throw new AuthenticationError('You need to be logged in!');
     },
 
     favoriteBook: async (parent, { favoriteBookId }, context) => {
       if (context.user) {
-        const favoriteBook = await User.findOneAndUpdate(
+        await User.findOneAndUpdate(
           { _id: context.user._id },
-          { $addToSet: { favoriteBooks: favoriteBookId } }
+          { $addToSet: { favoriteBooks: favoriteBookId } },
+          { new: true }
         );
-
-        return favoriteBook;
+    
+        const updatedUser = await User.findById(context.user._id).populate('favoriteBooks');
+    
+        return updatedUser;
       }
       throw new AuthenticationError('You need to be logged in!');
     },
