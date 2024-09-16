@@ -46,6 +46,7 @@ const typeDefs = `
     addComment(favoriteBookId: ID!, commentText: String!): FavoriteBook
     unFavoriteBook(favoriteBookId: ID!): FavoriteBook
     removeComment(favoriteBookId: ID!, commentId: ID!): FavoriteBook
+    updateUser(username: String, email: String): User
   }
 `;
 
