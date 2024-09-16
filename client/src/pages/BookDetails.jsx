@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import parse from "html-react-parser";
 import {
   Box,
@@ -23,6 +23,7 @@ import { QUERY_BOOK, QUERY_USER } from "../utils/queries";
 import { FAVORITE_BOOK, UNFAVORITE_BOOK, ADD_COMMENT } from "../utils/mutations";
 
 const BookDetails = () => {
+  const navigate = useNavigate();
   const toast = useToast();
   const { id } = useParams();
   const [book, setBook] = useState(null);
@@ -33,10 +34,7 @@ const BookDetails = () => {
   const [unFavoriteBook] = useMutation(UNFAVORITE_BOOK);
   const [addComment] = useMutation(ADD_COMMENT);
   const [getBook, { loading, error, data }] = useLazyQuery(QUERY_BOOK);
-  const username = AuthService.getProfile().data.username;
-  const { loading: userLoading, error: userError, data: userData, refetch } = useQuery(QUERY_USER, {
-    variables: { username: username}
-  });
+
   const bgColor = useColorModeValue("white", "gray.800");
   const textColor = useColorModeValue("gray.600", "gray.200");
   const borderColor = useColorModeValue("gray.200", "gray.700");
@@ -44,6 +42,28 @@ const BookDetails = () => {
     "10px 10px 0 #323535",
     "10px 10px 0 cyan"
   );
+
+  useEffect(() => {
+    if (!AuthService.loggedIn()) {
+      toast({
+        title: "Authentication required",
+        description: "Please log in to access this page",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+      navigate("/signin");
+      return;
+    }
+
+    const username = AuthService.getProfile().data.username;
+    refetch({ username });
+  }, [navigate, toast]);
+
+  const { loading: userLoading, error: userError, data: userData, refetch } = useQuery(QUERY_USER, {
+    skip: !AuthService.loggedIn(),
+    variables: { username: AuthService.loggedIn() ? AuthService.getProfile().data.username : '' }
+  });
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -59,22 +79,44 @@ const BookDetails = () => {
   useEffect(() => {
     if (data && data.book) {
       setBook(data.book);
-      setComments(data.book.comments)
+      setComments(data.book.comments || []);
     }
   }, [data]);
 
   useEffect(() => {
     if (!userLoading && !userError && userData && userData.user) {
-        setFavorites(userData.user.favoriteBooks);
-        refetch();
+      setFavorites(userData.user.favoriteBooks);
     }
+  }, [userLoading, userError, userData]);
 
-  }, [userLoading, userError, userData, refetch]);
-
-  const handleAddComment = () => {
+  const handleAddComment = async () => {
     if (newComment.trim()) {
-      setComments([...comments, { id: Date.now(), text: newComment }]);
-      setNewComment("");
+      try {
+        const { data } = await addComment({
+          variables: {
+            bookId: book._id,
+            commentText: newComment
+          }
+        });
+        if (data && data.addComment) {
+          // Ensure the new comment has an _id
+          const newCommentWithId = {
+            ...data.addComment,
+            _id: data.addComment._id
+          };
+          setComments(prevComments => [...prevComments, newCommentWithId]);
+          setNewComment("");
+        }
+      } catch (error) {
+        console.error("Error adding comment:", error);
+        toast({
+          title: "Error",
+          description: "There was an error adding your comment. Please try again.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
     }
   };
 
@@ -85,7 +127,6 @@ const BookDetails = () => {
           favoriteBookId: book._id
         },
       });
-
       if (data.favoriteBook) {
         setFavorites(prevFavorites => [...prevFavorites, book._id]);
         toast({
@@ -116,7 +157,6 @@ const BookDetails = () => {
           favoriteBookId: book._id
         },
       });
-
       if (data.unFavoriteBook) {
         setFavorites(prevFavorites => prevFavorites.filter(id => id !== book._id));
         toast({
@@ -126,7 +166,7 @@ const BookDetails = () => {
           duration: 3000,
           isClosable: true,
         });
-        refetch()
+        refetch();
       }
     } catch (error) {
       console.error("Error removing book from favorites:", error);
@@ -140,7 +180,7 @@ const BookDetails = () => {
     }
   };
 
-  const isFavorite = book ? favorites.some((fav) => fav._id === book._id) : false;
+  const isFavorite = book ? favorites.some((fav) => fav === book._id) : false;
 
   const handleFavoriteClick = () => {
     if (isFavorite) {
@@ -150,8 +190,8 @@ const BookDetails = () => {
     }
   };
 
-  if (loading) return <Box>Loading...</Box>;
-  if (error) return <Box>Error: {error.message}</Box>;
+  if (loading || userLoading) return <Box>Loading...</Box>;
+  if (error || userError) return <Box>Error: {(error || userError).message}</Box>;
   if (!book) return <Box>No book found</Box>;
 
   return (
@@ -206,19 +246,27 @@ const BookDetails = () => {
           Comments
         </Heading>
         <VStack spacing={4} align="stretch">
-          {comments.map((comment) => (
-            <Box
-              key={comment._id}
-              p={4}
-              bg={bgColor}
-              borderRadius="md"
-              borderWidth={1}
-              borderColor={borderColor}
-            >
-              <Text>{comment.commentText}</Text>
-              <Text>Commented By: {comment.commentAuthor} on {comment.createdOn}</Text>
-            </Box>
-          ))}
+          {comments.length > 0 ? (
+            comments.map((comment) => (
+              (
+                <Box
+                  key={comment._id}
+                  p={4}
+                  bg={bgColor}
+                  borderRadius="md"
+                  borderWidth={1}
+                  borderColor={borderColor}
+                >
+                  <Text>{comment.commentText}</Text>
+                  <Text fontSize="sm" mt={2}>
+                    Commented By: {comment.commentAuthor} on {comment.createdAt}
+                  </Text>
+                </Box>
+              )
+            ))
+          ) : (
+            <Text textAlign="center">No comments yet.</Text>
+          )}
           <Textarea
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
