@@ -21,7 +21,7 @@ const Library = () => {
   const [favorites, setFavorites] = useState([]);
   const toast = useToast();
   const { loading, error, data } = useQuery(QUERY_BOOKS);
-  console.log(data);
+  console.log(data.books);
   const [searchParams, setSearchParams] = useState({
     query: "",
     filter: "All",
