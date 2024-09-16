@@ -12,6 +12,7 @@ import BookCard from "../components/BookCard";
 import { FAVORITE_BOOK, UNFAVORITE_BOOK } from "../utils/mutations";
 import { QUERY_BOOKS } from "../utils/queries";
 import { useMutation } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import SearchBar from "../components/SearchBar";
 import AuthService from "../utils/auth";
 
@@ -19,6 +20,8 @@ const Library = () => {
   const [books, setBooks] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const toast = useToast();
+  const { loading, error, data } = useQuery(QUERY_BOOKS);
+  console.log(data);
   const [searchParams, setSearchParams] = useState({
     query: "",
     filter: "All",
@@ -67,7 +70,7 @@ const Library = () => {
         params.append("q", searchParams.query || "subject:fiction");
       }
       const response = await axios.get(url + params.toString());
-      setBooks(response.data.items || []);
+      setBooks(data.books || []);
     } catch (error) {
       console.error("Error fetching books:", error);
     }

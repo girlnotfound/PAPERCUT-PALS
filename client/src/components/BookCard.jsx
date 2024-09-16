@@ -43,15 +43,12 @@ const BookCard = ({
       >
         <Box h={imageHeight} borderBottom={"1px"} borderColor="black">
           <Img
-            src={
-              book.volumeInfo.imageLinks?.thumbnail ||
-              "https://via.placeholder.com/128x192"
-            }
+            src={book?.imageLink || "https://via.placeholder.com/128x192"}
             roundedTop={"sm"}
             objectFit="cover"
             h="full"
             w="full"
-            alt={book.volumeInfo.title}
+            alt={book.title}
           />
         </Box>
         <Box p={4}>
@@ -64,14 +61,14 @@ const BookCard = ({
             mb={2}
           >
             <Text fontSize={"xs"} fontWeight="medium">
-              {book.volumeInfo.categories?.[0] || "Fiction"}
+              {book.genre || "Fiction"}
             </Text>
           </Box>
           <Heading color={"black"} fontSize={"2xl"} noOfLines={1}>
-            {book.volumeInfo.title}
+            {book.title}
           </Heading>
           <Text color={"gray.500"} noOfLines={2}>
-            {book.volumeInfo.authors?.join(", ")}
+            {book.author}
           </Text>
         </Box>
         <HStack borderTop={"1px"} color="black">
