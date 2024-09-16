@@ -9,7 +9,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import BookCard from "../components/BookCard";
-import { ADD_BOOK } from "../utils/mutations";
+import { FAVORITE_BOOK, UNFAVORITE_BOOK } from "../utils/mutations";
 import { useMutation } from "@apollo/client";
 import SearchBar from "../components/SearchBar";
 import AuthService from "../utils/auth";
@@ -22,7 +22,8 @@ const Library = () => {
     query: "",
     filter: "All",
   });
-  const [addBook] = useMutation(ADD_BOOK);
+  const [favoriteBook] = useMutation(FAVORITE_BOOK);
+  const [unFavoriteBook] = useMutation(UNFAVORITE_BOOK);
   const bgGradient = useColorModeValue(
     "linear-gradient(-20deg, #D558C8 0%, #24D292 100%)",
     "linear-gradient(-20deg, #D558C8 0%, #24D292 100%)"
@@ -77,27 +78,14 @@ const Library = () => {
 
   const addToFavorites = async (book) => {
     try {
-      console.log(book.volumeInfo.title);
-      console.log(book.volumeInfo.authors.join(", "));
-      console.log(book.volumeInfo.categories.join(", "));
-      console.log(book.volumeInfo.description);
-      console.log(book.volumeInfo.publisher);
-      const { data } = await addBook({
+      console.log(book);
+      const { data } = await favoriteBook({
         variables: {
-          favoredBy: AuthService.getProfile().data.username,
-          title: book.volumeInfo.title,
-          author: book.volumeInfo.authors
-            ? book.volumeInfo.authors.join(", ")
-            : "Unknown",
-          genre: book.volumeInfo.categories
-            ? book.volumeInfo.categories.join(", ")
-            : "Uncategorized",
-          synopsis: book.volumeInfo.description || "No description available",
-          publisher: book.volumeInfo.publisher || "Unknown",
+          favoriteBookId: book.id
         },
       });
 
-      const addedBook = data.addBook;
+      const addedBook = data.favoriteBook;
       console.log("Book added:", addedBook);
 
       toast({
