@@ -60,6 +60,11 @@ const createMockUsers = async () => {
   return createdUsers;
 };
 
+const bookExists = async (bookId) => {
+  const existingBook = await Book.findOne({ _id: bookId });
+  return !!existingBook;
+};
+
 const addMockComments = async (books, users) => {
   const mockComments = [
     "Great read! Couldn't put it down.",
@@ -108,8 +113,14 @@ db.once('open', async () => {
 
     for (let i = 0; i < genres.length; i++) {
       const data = await fetchBooks(genres[i]);
-      const createdBooks = await Book.create(data);
-      allBooks = allBooks.concat(createdBooks);
+      for (const bookData of data) {
+        if (!(await bookExists(bookData._id))) {
+          const createdBook = await Book.create(bookData);
+          allBooks.push(createdBook);
+        } else {
+          console.log(`Book with ID ${bookData._id} already exists. Skipping.`);
+        }
+      }
     }
 
     const users = await createMockUsers();
