@@ -30,9 +30,41 @@ const BookDetails = () => {
   const [favorites, setFavorites] = useState([]);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+
   const [favoriteBook] = useMutation(FAVORITE_BOOK);
   const [unFavoriteBook] = useMutation(UNFAVORITE_BOOK);
-  const [addComment] = useMutation(ADD_COMMENT);
+  const [addComment] = useMutation(ADD_COMMENT, {
+    update(cache, { data: { addComment } }) {
+      const existingBook = cache.readQuery({
+        query: QUERY_BOOK,
+        variables: { id }
+      });
+      
+      if (existingBook && existingBook.book) {
+        cache.writeQuery({
+          query: QUERY_BOOK,
+          variables: { id },
+          data: {
+            book: {
+              ...existingBook.book,
+              comments: addComment.comments
+            }
+          }
+        });
+      }
+    },
+    onError: (error) => {
+      console.error('Error adding comment:', error);
+      toast({
+        title: "Error",
+        description: "Failed to add comment. Please try again.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  });
+
   const [getBook, { loading, error, data }] = useLazyQuery(QUERY_BOOK);
 
   const bgColor = useColorModeValue("white", "gray.800");
@@ -55,7 +87,6 @@ const BookDetails = () => {
       navigate("/signin");
       return;
     }
-
     const username = AuthService.getProfile().data.username;
     refetch({ username });
   }, [navigate, toast]);
@@ -89,36 +120,38 @@ const BookDetails = () => {
     }
   }, [userLoading, userError, userData]);
 
-  const handleAddComment = async () => {
-    if (newComment.trim()) {
-      try {
-        const { data } = await addComment({
-          variables: {
-            bookId: book._id,
-            commentText: newComment
-          }
-        });
-        if (data && data.addComment) {
-          // Ensure the new comment has an _id
-          const newCommentWithId = {
-            ...data.addComment,
-            _id: data.addComment._id
-          };
-          setComments(prevComments => [...prevComments, newCommentWithId]);
-          setNewComment("");
+ const handleAddComment = async () => {
+  if (newComment.trim()) {
+    try {
+      const { data } = await addComment({
+        variables: {
+          bookId: book._id,
+          commentText: newComment
         }
-      } catch (error) {
-        console.error("Error adding comment:", error);
+      });
+      if (data && data.addComment) {
+        setComments(data.addComment.comments);
+        setNewComment("");
         toast({
-          title: "Error",
-          description: "There was an error adding your comment. Please try again.",
-          status: "error",
+          title: "Comment added",
+          description: "Your comment has been successfully added.",
+          status: "success",
           duration: 3000,
           isClosable: true,
         });
       }
+    } catch (error) {
+      console.error("Error adding comment:", error);
+      toast({
+        title: "Error",
+        description: "There was an error adding your comment. Please try again.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
-  };
+  }
+};
 
   const addToFavorites = async (book) => {
     try {
@@ -190,13 +223,15 @@ const BookDetails = () => {
     }
   };
 
-  if (loading || userLoading) return <Box>Loading...</Box>;
-  if (error || userError) return <Box>Error: {(error || userError).message}</Box>;
-  if (!book) return <Box>No book found</Box>;
+  if (loading || userLoading) return <p>Loading...</p>;
+  if (error || userError) return <p>Error: {(error || userError).message}</p>;
+  if (!book) return <p>No book found</p>;
 
   return (
-    <Container maxW="container.xl" py={12}>
-      <Flex direction={{ base: "column", md: "row" }} gap={8}>
+    <Container maxW="container.xl" py={10}>
+      {book && (
+        <VStack spacing={6} align="stretch">
+ <Flex direction={{ base: "column", md: "row" }} gap={8}>
         <Box flex={1}>
           <Image
             src={book.imageLink || "https://via.placeholder.com/128x192"}
@@ -241,48 +276,37 @@ const BookDetails = () => {
 
       <Divider my={8} />
 
-      <Box>
-        <Heading size="lg" mb={4} textAlign="center">
-          Comments
-        </Heading>
-        <VStack spacing={4} align="stretch">
-          {comments.length > 0 ? (
-            comments.map((comment) => (
-              (
-                <Box
-                  key={comment._id}
-                  p={4}
-                  bg={bgColor}
-                  borderRadius="md"
-                  borderWidth={1}
-                  borderColor={borderColor}
-                >
+          <Box>
+            <Heading as="h2" size="lg" mb={4}>
+              Comments
+            </Heading>
+            {comments.length > 0 ? (
+              comments.map((comment) => (
+                <Box key={comment._id} mb={4} p={4} borderWidth={1} borderRadius="md">
                   <Text>{comment.commentText}</Text>
-                  <Text fontSize="sm" mt={2}>
+                  <Text fontSize="sm" color="gray.500">
                     Commented By: {comment.commentAuthor} on {comment.createdAt}
                   </Text>
                 </Box>
-              )
-            ))
-          ) : (
-            <Text textAlign="center">No comments yet.</Text>
-          )}
-          <Textarea
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Add a comment..."
-            size="sm"
-          />
-          <Button
-            onClick={handleAddComment}
-            bg="#97cba9"
-            color="white"
-            _hover={{ bg: "#7ab08e" }}
-          >
-            Add Comment
-          </Button>
+              ))
+            ) : (
+              <Text>No comments yet.</Text>
+            )}
+          </Box>
+
+          <Box>
+            <Textarea
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="Add a comment..."
+              size="sm"
+            />
+            <Button mt={2} onClick={handleAddComment}>
+              Add Comment
+            </Button>
+          </Box>
         </VStack>
-      </Box>
+      )}
     </Container>
   );
 };
