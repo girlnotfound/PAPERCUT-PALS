@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import BookCard from "../components/BookCard";
 import { FAVORITE_BOOK, UNFAVORITE_BOOK } from "../utils/mutations";
+import { QUERY_BOOKS } from "../utils/queries";
 import { useMutation } from "@apollo/client";
 import SearchBar from "../components/SearchBar";
 import AuthService from "../utils/auth";

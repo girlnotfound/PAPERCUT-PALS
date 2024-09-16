@@ -79,5 +79,6 @@ export const QUERY_FAVORITEBOOKS = gql`
       favoriteBooks {
         _id
       }
+    }
   }
 `;
