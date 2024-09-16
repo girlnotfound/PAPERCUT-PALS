@@ -80,7 +80,7 @@ const BookCard = ({
             cursor={"pointer"}
             w="full"
             as={Link}
-            to={`/book/${book.id}`}
+            to={`/book/${book._id}`}
           >
             <Text fontSize={"md"} fontWeight={"semibold"}>
               View Details

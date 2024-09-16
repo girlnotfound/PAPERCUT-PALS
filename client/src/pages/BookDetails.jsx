@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import parse from "html-react-parser";
 import {
   Box,
@@ -15,16 +14,29 @@ import {
   Textarea,
   Button,
   Divider,
+  useToast
 } from "@chakra-ui/react";
 import { BsHeartFill, BsHeart } from "react-icons/bs";
+import { useLazyQuery, useQuery, useMutation } from "@apollo/client";
+import AuthService from "../utils/auth";
+import { QUERY_BOOK, QUERY_USER } from "../utils/queries";
+import { FAVORITE_BOOK, UNFAVORITE_BOOK, ADD_COMMENT } from "../utils/mutations";
 
 const BookDetails = () => {
+  const toast = useToast();
   const { id } = useParams();
   const [book, setBook] = useState(null);
   const [favorites, setFavorites] = useState([]);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
-
+  const [favoriteBook] = useMutation(FAVORITE_BOOK);
+  const [unFavoriteBook] = useMutation(UNFAVORITE_BOOK);
+  const [addComment] = useMutation(ADD_COMMENT);
+  const [getBook, { loading, error, data }] = useLazyQuery(QUERY_BOOK);
+  const username = AuthService.getProfile().data.username;
+  const { loading: userLoading, error: userError, data: userData, refetch } = useQuery(QUERY_USER, {
+    variables: { username: username}
+  });
   const bgColor = useColorModeValue("white", "gray.800");
   const textColor = useColorModeValue("gray.600", "gray.200");
   const borderColor = useColorModeValue("gray.200", "gray.700");
@@ -36,21 +48,28 @@ const BookDetails = () => {
   useEffect(() => {
     const fetchBook = async () => {
       try {
-        const response = await axios.get(
-          `https://www.googleapis.com/books/v1/volumes/${id}`
-        );
-        setBook(response.data);
+        await getBook({ variables: { bookId: id } });
       } catch (error) {
         console.error("Error fetching book details:", error);
       }
     };
     fetchBook();
+  }, [id, getBook]);
 
-    const storedFavorites = JSON.parse(
-      localStorage.getItem("favorites") || "[]"
-    );
-    setFavorites(storedFavorites);
-  }, [id]);
+  useEffect(() => {
+    if (data && data.book) {
+      setBook(data.book);
+      setComments(data.book.comments)
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (!userLoading && !userError && userData && userData.user) {
+        setFavorites(userData.user.favoriteBooks);
+        refetch();
+    }
+
+  }, [userLoading, userError, userData, refetch]);
 
   const handleAddComment = () => {
     if (newComment.trim()) {
@@ -59,19 +78,69 @@ const BookDetails = () => {
     }
   };
 
-  const addToFavorites = (book) => {
-    const updatedFavorites = [...favorites, book];
-    setFavorites(updatedFavorites);
-    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+  const addToFavorites = async (book) => {
+    try {
+      const { data } = await favoriteBook({
+        variables: {
+          favoriteBookId: book._id
+        },
+      });
+
+      if (data.favoriteBook) {
+        setFavorites(prevFavorites => [...prevFavorites, book._id]);
+        toast({
+          title: "Book added to favorites",
+          description: "The book has been successfully added to your favorites.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+        refetch();
+      }
+    } catch (error) {
+      console.error("Error adding book to favorites:", error);
+      toast({
+        title: "Error",
+        description: "There was an error adding the book to favorites. Please try again.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
-  const removeFromFavorites = (book) => {
-    const updatedFavorites = favorites.filter((fav) => fav.id !== book.id);
-    setFavorites(updatedFavorites);
-    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+  const removeFromFavorites = async (book) => {
+    try {
+      const { data } = await unFavoriteBook({
+        variables: {
+          favoriteBookId: book._id
+        },
+      });
+
+      if (data.unFavoriteBook) {
+        setFavorites(prevFavorites => prevFavorites.filter(id => id !== book._id));
+        toast({
+          title: "Book unfavorited",
+          description: "The book has been successfully removed from your favorites.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+        refetch()
+      }
+    } catch (error) {
+      console.error("Error removing book from favorites:", error);
+      toast({
+        title: "Error",
+        description: "There was an error removing the book from favorites. Please try again.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
-  const isFavorite = book ? favorites.some((fav) => fav.id === book.id) : false;
+  const isFavorite = book ? favorites.some((fav) => fav._id === book._id) : false;
 
   const handleFavoriteClick = () => {
     if (isFavorite) {
@@ -81,18 +150,17 @@ const BookDetails = () => {
     }
   };
 
-  if (!book) return <Box>Loading...</Box>;
+  if (loading) return <Box>Loading...</Box>;
+  if (error) return <Box>Error: {error.message}</Box>;
+  if (!book) return <Box>No book found</Box>;
 
   return (
     <Container maxW="container.xl" py={12}>
       <Flex direction={{ base: "column", md: "row" }} gap={8}>
         <Box flex={1}>
           <Image
-            src={
-              book.volumeInfo.imageLinks?.thumbnail ||
-              "https://via.placeholder.com/128x192"
-            }
-            alt={book.volumeInfo.title}
+            src={book.imageLink || "https://via.placeholder.com/128x192"}
+            alt={book.title}
             objectFit="cover"
             w="full"
             h="500px"
@@ -101,26 +169,22 @@ const BookDetails = () => {
           />
         </Box>
         <VStack flex={2} align="start" spacing={4}>
-          <Heading size="2xl">{book.volumeInfo.title}</Heading>
+          <Heading size="2xl">{book.title}</Heading>
           <Text fontSize="xl" color={textColor}>
-            by {book.volumeInfo.authors?.join(", ")}
+            by {book.author}
           </Text>
           <HStack>
             <Text fontWeight="bold">Categories:</Text>
-            <Text>
-              {book.volumeInfo.categories?.join(", ") || "Not specified"}
-            </Text>
+            <Text>{book.genre || "Not specified"}</Text>
           </HStack>
           <HStack>
             <Text fontWeight="bold">Published:</Text>
-            <Text>{book.volumeInfo.publishedDate}</Text>
+            <Text>{book.published}</Text>
           </HStack>
           <Box>
             <Text fontWeight="bold">Description:</Text>
             <Box color={textColor}>
-              {parse(
-                book.volumeInfo.description || "No description available."
-              )}
+              {parse(book.description || "No description available.")}
             </Box>
           </Box>
           <HStack>
@@ -144,14 +208,15 @@ const BookDetails = () => {
         <VStack spacing={4} align="stretch">
           {comments.map((comment) => (
             <Box
-              key={comment.id}
+              key={comment._id}
               p={4}
               bg={bgColor}
               borderRadius="md"
               borderWidth={1}
               borderColor={borderColor}
             >
-              <Text>{comment.text}</Text>
+              <Text>{comment.commentText}</Text>
+              <Text>Commented By: {comment.commentAuthor} on {comment.createdOn}</Text>
             </Box>
           ))}
           <Textarea

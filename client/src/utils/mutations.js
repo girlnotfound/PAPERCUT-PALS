@@ -30,6 +30,7 @@ export const ADD_COMMENT = gql`
     addComment(bookId: $bookId, commentText: $commentText) {
       comments {
         _id
+        commentAuthor
         commentText
         createdAt
       }
@@ -42,6 +43,7 @@ export const REMOVE_COMMENT = gql`
     removeComment(bookId: $bookId, commentText: $commentText) {
       comments {
         _id
+        commentAuthor
         commentText
         createdAt
       }
