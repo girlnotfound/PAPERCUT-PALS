@@ -138,7 +138,7 @@ const BookOfTheMonth = () => {
                 isFavorite={favoriteBookIds.includes(book._id)}
               />
             </VStack>
-            <Box mt={4}>
+            <Box my={4} mx={5} maxWidth={"90%"} display={"flex"} justifyContent={"center"} flexDirection={"column"} alignItems={"center"}>
               <VStack align="stretch" spacing={4}>
                 {book.comments.map((comment) => (
                   <Box key={comment._id} p={2} bg="gray.100" borderRadius="md">
