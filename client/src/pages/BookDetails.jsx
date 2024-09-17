@@ -81,6 +81,16 @@ const BookDetails = () => {
     }
   };
 
+  const handleAmazonSearch = () => {
+    const searchQuery = encodeURIComponent(`${book.volumeInfo.title} ${book.volumeInfo.authors?.join(" ")}`);
+    window.open(`https://www.amazon.com/s?k=${searchQuery}`, '_blank');
+  };
+
+  const handleBarnesNobleSearch = () => {
+    const searchQuery = encodeURIComponent(`${book.volumeInfo.title} ${book.volumeInfo.authors?.join(" ")}`);
+    window.open(`https://www.barnesandnoble.com/s/${searchQuery}`, '_blank');
+  };
+
   if (!book) return <Box>Loading...</Box>;
 
   return (
@@ -123,13 +133,25 @@ const BookDetails = () => {
               )}
             </Box>
           </Box>
-          <HStack>
+          <HStack spacing={4}>
             <Button
               leftIcon={isFavorite ? <BsHeartFill /> : <BsHeart />}
               colorScheme={isFavorite ? "red" : "gray"}
               onClick={handleFavoriteClick}
             >
               {isFavorite ? "Unfavorite" : "Favorite"}
+            </Button>
+            <Button
+              colorScheme="orange"
+              onClick={handleAmazonSearch}
+            >
+              Search on Amazon
+            </Button>
+            <Button
+              colorScheme="green"
+              onClick={handleBarnesNobleSearch}
+            >
+              Search on Barnes & Noble
             </Button>
           </HStack>
         </VStack>
