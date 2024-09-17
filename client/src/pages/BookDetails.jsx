@@ -20,7 +20,7 @@ import { BsHeartFill, BsHeart } from "react-icons/bs";
 import { useLazyQuery, useQuery, useMutation } from "@apollo/client";
 import AuthService from "../utils/auth";
 import { QUERY_BOOK, QUERY_USER } from "../utils/queries";
-import { FAVORITE_BOOK, UNFAVORITE_BOOK, ADD_COMMENT } from "../utils/mutations";
+import { FAVORITE_BOOK, UNFAVORITE_BOOK, ADD_COMMENT, REMOVE_COMMENT } from "../utils/mutations";
 
 const BookDetails = () => {
   const navigate = useNavigate();
@@ -35,6 +35,7 @@ const BookDetails = () => {
     console.log(comments);
     
   },[comments])
+  const [removeComment] = useMutation(REMOVE_COMMENT);
   const [favoriteBook] = useMutation(FAVORITE_BOOK);
   const [unFavoriteBook] = useMutation(UNFAVORITE_BOOK);
   const [addComment] = useMutation(ADD_COMMENT, {
@@ -219,6 +220,31 @@ const BookDetails = () => {
     window.open(`https://www.barnesandnoble.com/s/${searchQuery}`, '_blank');
   };
 
+  const handleRemoveComment = async (commentId) => {
+    try {
+      await removeComment({
+        variables: { bookId: book._id, commentId },
+        refetchQueries: [{ query: QUERY_BOOK, variables: { bookId: id } }]
+      });
+      setComments(prevComments => prevComments.filter(comment => comment._id !== commentId));
+      toast({
+        title: "Comment removed",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error("Error removing comment:", error);
+      toast({
+        title: "Error",
+        description: "There was an error removing your comment. Please try again.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
   if (bookLoading || userLoading) return <Box>Loading...</Box>;
   if (bookError || userError) return <Box>Error: {(bookError || userError).message}</Box>;
   if (!book) return <Box>No book found</Box>;
@@ -287,17 +313,21 @@ const BookDetails = () => {
 
       <Divider my={8} />
         <VStack align="start" spacing={4}>
-          <Heading as="h2" size="lg">Comments</Heading>
+        <Heading as="h3" size="md">Comments</Heading>
           {comments.length > 0 ? (
-            comments.map((comment) => {
-              console.log(comment);
-             return <Box key={comment._id} p={4} borderWidth={1} borderRadius="md" w="full">
+            comments.map((comment) => (
+              <Box key={comment._id} p={2} bg="gray.100" borderRadius="md" width="100%">
                 <Text>{comment.commentText}</Text>
-                <Text fontSize="sm" color={textColor}>
+                <Text fontSize="sm" color="gray.500">
                   Commented By: {comment.commentAuthor} on {comment.createdAt}
                 </Text>
+                {AuthService.loggedIn() && AuthService.getProfile().data.username === comment.commentAuthor && (
+                  <Button size="xs" onClick={() => handleRemoveComment(comment._id)} mt={2}>
+                    Remove
+                  </Button>
+                )}
               </Box>
-          })
+            ))
           ) : (
             <Text>No comments yet.</Text>
           )}
