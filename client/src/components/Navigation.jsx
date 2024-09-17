@@ -15,6 +15,7 @@ import {
   MenuDivider,
   useDisclosure,
   Stack,
+  Text,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import PropTypes from "prop-types";
@@ -93,6 +94,11 @@ export default function Navigation() {
             </HStack>
           </HStack>
           <Flex alignItems={"center"}>
+            {user && (
+              <Text color="white" fontWeight="medium" mr={2}>
+                {user.username}
+              </Text>
+            )}
             <Menu>
               <MenuButton
                 as={Button}
