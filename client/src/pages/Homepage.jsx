@@ -1,158 +1,74 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import {
-  Box,
-  Heading,
-  SimpleGrid,
-  Skeleton,
-  useColorModeValue,
-  Image,
-  useToast,
-} from "@chakra-ui/react";
-import BookCard from "../components/BookCard2";
+import { useState, useEffect } from 'react';
+import { useQuery, useMutation } from '@apollo/client';
+import { QUERY_BOOKS, QUERY_FAVORITEBOOKS } from '../utils/queries';
+import { FAVORITE_BOOK, UNFAVORITE_BOOK } from '../utils/mutations';
+import BookCard2 from '../components/BookCard2';
+import { SimpleGrid, Heading, VStack } from '@chakra-ui/react';
 import AuthService from "../utils/auth";
 
-const BookOfTheMonth = () => {
-  const bgGradient = useColorModeValue(
-    "linear-gradient(-20deg, #d558c8 0%, #24d292 100%)",
-    "linear-gradient(-20deg, #d558c8 0%, #24d292 100%)"
-  );
-  const toast = useToast();
-  const [books, setBooks] = useState([]);
-  const [favorites, setFavorites] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [expandedBookId, setExpandedBookId] = useState(null);
+const Homepage = () => {
+  const [featuredBooks, setFeaturedBooks] = useState([]);
+  const [favoriteBookIds, setFavoriteBookIds] = useState([]);
+  const { loading: loadingBooks, data: booksData } = useQuery(QUERY_BOOKS);
+  const { loading: loadingFavs, data: favsData } = useQuery(QUERY_FAVORITEBOOKS, {
+    variables: { username: AuthService.getProfile().data.username } // Replace with actual username or get from context
+  });
+  const [favoriteBook] = useMutation(FAVORITE_BOOK);
+  const [unfavoriteBook] = useMutation(UNFAVORITE_BOOK);
 
   useEffect(() => {
-    if (!AuthService.loggedIn()) {
-      toast({
-        title: "Authentication required",
-        description: "Please log in to access Homepage",
-        status: "warning",
-        duration: 3000,
-        isClosable: true,
+    if (booksData && booksData.books) {
+      setFeaturedBooks(booksData.books.slice(0, 3));
+    }
+  }, [booksData]);
+
+  useEffect(() => {
+    if (favsData && favsData.favoriteBooks && favsData.favoriteBooks.favoriteBooks) {
+      const favBooks = favsData.favoriteBooks.favoriteBooks;
+      const favIds = Object.keys(favBooks).map(key => favBooks[key]._id);
+      setFavoriteBookIds(favIds);
+    }
+  }, [favsData]);
+
+  const handleToggleFavorite = async (book) => {
+    try {
+      const isFavorite = favoriteBookIds.includes(book._id);
+      const mutation = isFavorite ? unfavoriteBook : favoriteBook;
+      await mutation({
+        variables: { favoriteBookId: book._id },
+        refetchQueries: [{ query: QUERY_FAVORITEBOOKS, variables: { username: 'currentUser' } }]
       });
-      window.location.assign("/signin");
-      return;
-    }
 
-    const fetchBooks = async () => {
-      setLoading(true);
-      const months = ["last", "current", "next"];
-      const storedBooks = localStorage.getItem("booksOfTheMonth");
-
-      if (storedBooks) {
-        setBooks(JSON.parse(storedBooks));
-      } else {
-        try {
-          const fetchedBooks = await Promise.all(
-            months.map(async (month) => {
-              const response = await axios.get(
-                `https://www.googleapis.com/books/v1/volumes?q=subject:fiction&orderBy=newest&maxResults=40`
-              );
-              const randomIndex = Math.floor(
-                Math.random() * response.data.items.length
-              );
-              const book = response.data.items[randomIndex];
-              return {
-                id: book.id,
-                volumeInfo: {
-                  ...book.volumeInfo,
-                  imageLinks: book.volumeInfo.imageLinks || {
-                    thumbnail: "https://via.placeholder.com/128x192",
-                  },
-                },
-                month,
-              };
-            })
-          );
-          setBooks(fetchedBooks);
-          localStorage.setItem("booksOfTheMonth", JSON.stringify(fetchedBooks));
-        } catch (error) {
-          console.error("Error fetching books:", error);
-        }
-      }
-      setLoading(false);
-    };
-
-    fetchBooks();
-    const storedFavorites = JSON.parse(
-      localStorage.getItem("favorites") || "[]"
-    );
-    setFavorites(storedFavorites);
-  }, [toast]); // added toast to the dependency array
-
-  const addToFavorites = (book) => {
-    const updatedFavorites = [...favorites, book];
-    setFavorites(updatedFavorites);
-    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
-  };
-
-  const removeFromFavorites = (book) => {
-    const updatedFavorites = favorites.filter((fav) => fav.id !== book.id);
-    setFavorites(updatedFavorites);
-    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
-  };
-
-  // function to get the appropriate label for each book
-  const getBookLabel = (month) => {
-    switch (month) {
-      case "last":
-        return "Last Month's Pick";
-      case "current":
-        return "This Month's Top Choice";
-      case "next":
-        return "Next Month's Selection";
-      default:
-        return "";
+      setFavoriteBookIds(prevFavs => 
+        isFavorite 
+          ? prevFavs.filter(id => id !== book._id)
+          : [...prevFavs, book._id]
+      );
+    } catch (err) {
+      console.error('Error toggling favorite:', err);
     }
   };
+
+  if (loadingBooks || loadingFavs) return <div>Loading...</div>;
 
   return (
-    <Box p={4} sx={{ background: bgGradient, minHeight: "100vh" }}>
-      {/* logo image as heading */}
-      <Box display="flex" justifyContent="center" mb={15}>
-        <Image
-          src="/images/FeaturedBooks_Logo.png"
-          alt="Featured Books of the Month"
-          maxWidth="100%"
-          height="85px"
-        />
-      </Box>
-
-      <SimpleGrid columns={[1, null, 3]} spacing={0}>
-        {loading
-          ? Array(3)
-              .fill(0)
-              .map((_, index) => (
-                <Skeleton key={index} height="400px" borderRadius="lg" />
-              ))
-          : books.map((book) => (
-              // wrap BookCard in Box with label
-              <Box key={book.id} margin={0} padding={0}>
-                {/* add book label as heading */}
-                <Heading as="h3" size="md" mb={0} textAlign="center">
-                  {getBookLabel(book.month)}
-                </Heading>
-                <BookCard
-                  book={book}
-                  showComments={expandedBookId === book.id}
-                  addToFavorites={addToFavorites}
-                  removeFromFavorites={removeFromFavorites}
-                  isFavorite={favorites.some((fav) => fav.id === book.id)}
-                  onClick={() =>
-                    setExpandedBookId(
-                      book.id === expandedBookId ? null : book.id
-                    )
-                  }
-                  imageHeight="440px"
-                  boxWidth="300px"
-                />
-              </Box>
-            ))}
+    <VStack spacing={8} align="stretch">
+      <Heading as="h1" size="2xl" textAlign="center">Featured Books</Heading>
+      <SimpleGrid columns={[1, null, 3]} spacing={10}>
+        {featuredBooks.map((book, index) => (
+          <VStack key={book._id}>
+            <Heading as="h2" size="md">Featured Book {index + 1}</Heading>
+            <BookCard2
+              book={book}
+              addToFavorites={() => handleToggleFavorite(book)}
+              removeFromFavorites={() => handleToggleFavorite(book)}
+              isFavorite={favoriteBookIds.includes(book._id)}
+            />
+          </VStack>
+        ))}
       </SimpleGrid>
-    </Box>
+    </VStack>
   );
 };
 
-export default BookOfTheMonth;
+export default Homepage;
