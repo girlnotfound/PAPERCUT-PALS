@@ -48,6 +48,16 @@ export const QUERY_BOOKS = gql`
   }
 `;
 
+export const QUERY_ME = gql`
+  query me {
+    me {
+      _id
+      username
+      email
+    }
+  }
+`;
+
 export const QUERY_BOOK = gql`
   query getBook($bookId: String!) {
     book(bookId: $bookId) {

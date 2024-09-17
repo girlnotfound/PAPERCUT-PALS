@@ -209,6 +209,16 @@ const BookDetails = () => {
     }
   };
 
+  const handleAmazonSearch = () => {
+    const searchQuery = encodeURIComponent(`${book.title} ${book.author}`);
+    window.open(`https://www.amazon.com/s?k=${searchQuery}`, '_blank');
+  };
+
+  const handleBarnesNobleSearch = () => {
+    const searchQuery = encodeURIComponent(`${book.title} ${book.author}`);
+    window.open(`https://www.barnesandnoble.com/s/${searchQuery}`, '_blank');
+  };
+
   if (bookLoading || userLoading) return <Box>Loading...</Box>;
   if (bookError || userError) return <Box>Error: {(bookError || userError).message}</Box>;
   if (!book) return <Box>No book found</Box>;
@@ -251,13 +261,25 @@ const BookDetails = () => {
               {parse(book.description || "No description available.")}
             </Box>
           </Box>
-          <HStack>
+          <HStack spacing={4}>
             <Button
               leftIcon={isFavorite ? <BsHeartFill /> : <BsHeart />}
               colorScheme={isFavorite ? "red" : "gray"}
               onClick={handleFavoriteClick}
             >
               {isFavorite ? "Unfavorite" : "Favorite"}
+            </Button>
+            <Button
+              colorScheme="orange"
+              onClick={handleAmazonSearch}
+            >
+              Search on Amazon
+            </Button>
+            <Button
+              colorScheme="green"
+              onClick={handleBarnesNobleSearch}
+            >
+              Search on Barnes & Noble
             </Button>
           </HStack>
         </VStack>
