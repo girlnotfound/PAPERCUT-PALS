@@ -89,7 +89,7 @@ THEN I am logged out of the site and redirected to the Signup page, where I am p
 
 ## Installation
 
-To install PAPERCUT PALS:
+#### To install PAPERCUT PALS:
 
 - Clone the repository: `https://github.com/girlnotfound/PAPERCUT-PALS`
 
@@ -98,16 +98,64 @@ To install PAPERCUT PALS:
 - Open the terminal and install the dependencies by running the command: `npm install`
 
 ## Usage
-
-- Start the application, in the terminal run the command: `npm run develop`
-
-- You will be redirected to the application: `http://localhost:3000/`
-
-- **Homepage:**
-- **About:**
-- **Login/Signup:** Register or log in...
+#### To use PAPERCUT PALS:
+Start the application:
+- In the terminal, run the command: `npm run develop`
+- This will start both the server and the client concurrently
+#### Access the application:
+- Open your web browser and navigate to: `http://localhost:3000/`
+#### Sign Up or Log In:
+- If you're a new user, click on the "Sign Up" option and create an account
+- Existing users can log in using their credentials
+#### Explore the Homepage:
+- Browse the featured "Books of the Month"
+- Use the navigation bar to access different sections of the app
+#### Discover Books:
+-Click on "Library" in the navigation bar
+- Use the search bar to find books by title, author, or genre
+- Click on book cards to view more details
+#### Interact with Books:
+On a book's detail page, you can:
+- Read the full description
+- Add the book to your favorites by clicking the heart icon
+- Leave comments and engage in discussions
+#### Manage Your Favorites:
+- Access your favorited books by clicking "My Favorites" in the navigation bar
+- Remove books from your favorites by clicking the unheart button
+#### Profile Management:
+- Click on your avatar icon to access profile settings or log out
+About Page:
+- Learn more about the developers and the project by visiting the About page
 
 ## Features
+#### Book Discovery
+- Books of the Month: Curated selection of featured books on the homepage
+- Library: Extensive collection of books searchable by title, author, or genre
+- Search Functionality: Robust search feature with results displayed as book cards
+#### Book Details
+- Title and author
+- Cover image
+- Synopsis
+- Publishing date
+- Genre
+##### "View Details" option for each book to access full information
+#### User Authentication
+- Secure signup and login functionality
+- User profile management with avatar customization
+#### Personalization
+- Favorites: Ability to mark books as favorites with a heart icon
+- My Favorites Page: Dedicated page to view and manage favorited books
+- Option to remove books from favorites by unhearting same heart icon.
+#### Community Engagement
+- Comment system allowing users to share thoughts and discuss books
+- User-friendly interface for leaving and viewing comments on book detail pages
+#### Responsive Design
+- Polished UI that adapts to various screen sizes for optimal viewing on different devices
+#### Navigation
+- Intuitive navigation bar with options for Library, My Favorites, and About page
+- User avatar menu for quick access to profile settings and logout option
+#### Data Persistence
+- User data, favorites, and comments are securely stored and persist across sessions
 
 ## Contributing
 
