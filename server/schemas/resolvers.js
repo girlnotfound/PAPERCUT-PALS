@@ -18,7 +18,7 @@ const resolvers = {
     },
     me: async (parent, args, context) => {
       if (context.user) {
-        return User.findOne({ _id: context.user._id }).populate('thoughts');
+        return User.findOne({ _id: context.user._id }).populate('favoriteBooks');
       }
       throw AuthenticationError;
     },
@@ -48,9 +48,14 @@ const resolvers = {
       return { token, user };
     },
 
-    updateUser: async (parent, args, context) => {
+    updateUser: async (parent, { username, email, profileImage }, context) => {
       if (context.user) {
-        return await User.findByIdAndUpdate(context.user._id, args, { new: true });
+        const updatedUser = await User.findByIdAndUpdate(
+          context.user._id,
+          { username, email, profileImage },
+          { new: true }
+        );
+        return updatedUser;
       }
       throw AuthenticationError;
     },
@@ -74,11 +79,10 @@ const resolvers = {
         return favoriteBook;
       }
       throw AuthenticationError;
-      ('You need to be logged in!');
     },
     addComment: async (parent, { favoriteBookId, commentText }, context) => {
       if (context.user) {
-        return favoriteBookId.findOneAndUpdate(
+        return FavoriteBook.findOneAndUpdate(
           { _id: favoriteBookId },
           {
             $addToSet: {
@@ -105,13 +109,13 @@ const resolvers = {
           { $pull: { favoriteBooks: favoriteBook._id } }
         );
 
-        return thought;
+        return favoriteBook;
       }
       throw AuthenticationError;
     },
     removeComment: async (parent, { favoriteBookId, commentId }, context) => {
       if (context.user) {
-        return Thought.findOneAndUpdate(
+        return FavoriteBook.findOneAndUpdate(
           { _id: favoriteBookId },
           {
             $pull: {

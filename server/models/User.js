@@ -19,6 +19,9 @@ const userSchema = new Schema({
     required: true,
     minlength: 5,
   },
+  profileImage: {
+    type: String,
+  },
   favoriteBooks: [
     {
       type: Schema.Types.ObjectId,

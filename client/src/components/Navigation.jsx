@@ -1,4 +1,5 @@
 "use client";
+import React from 'react';
 import { Link as RouterLink } from "react-router-dom";
 import {
   Box,
@@ -18,6 +19,7 @@ import {
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import PropTypes from "prop-types";
 import Auth from "../utils/auth";
+import { useUser } from '../hooks/useUser';
 
 const Links = [
   { name: "Homepage", path: "/homepage" },
@@ -55,6 +57,9 @@ NavLink.propTypes = {
 
 export default function Navigation() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { user, loading } = useUser();
+
+  const placeholderImage = 'https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg';
 
   return (
     <>
@@ -95,11 +100,11 @@ export default function Navigation() {
                 variant={"link"}
                 cursor={"pointer"}
                 minW={0}
-                _hover={{ bg: "transparent" }} // Keep the button transparent on hover
+                _hover={{ bg: "transparent" }}
               >
                 <Avatar
                   size={"sm"}
-                  src={"https://avatars.githubusercontent.com/u/5844161?v=4"}
+                  src={user?.profileImage || placeholderImage}
                   border="2px solid white"
                 />
               </MenuButton>

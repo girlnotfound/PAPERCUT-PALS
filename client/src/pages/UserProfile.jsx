@@ -1,19 +1,28 @@
-import React, { useState } from 'react';
-import { useQuery, useMutation } from '@apollo/client';
-import { QUERY_ME } from '../utils/queries';
+// src/pages/UserProfile.jsx
+
+import React, { useState, useEffect } from 'react';
+import { useMutation } from '@apollo/client';
 import { UPDATE_USER } from '../utils/mutations';
 import "../styles/style.css";
 import axios from 'axios';
+import { useUser } from '../hooks/useUser';
 
 const UserProfile = () => {
-  const { loading, data } = useQuery(QUERY_ME);
   const [updateUser] = useMutation(UPDATE_USER);
+  const { user, loading, refreshUser } = useUser();
   const [uploading, setUploading] = useState(false);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [profileImage, setProfileImage] = useState(null);
   const [imageUrl, setImageUrl] = useState('');
 
+  useEffect(() => {
+    if (user) {
+      setUsername(user.username);
+      setEmail(user.email);
+      setImageUrl(user.profileImage || '');
+    }
+  }, [user]);
 
   const uploadProfileImage = async () => {
     if (!profileImage) return;
@@ -37,14 +46,6 @@ const UserProfile = () => {
     }
   };
 
-  // Set initial values when data is loaded
-  React.useEffect(() => {
-    if (data && data.me) {
-      setUsername(data.me.username);
-      setEmail(data.me.email);
-    }
-  }, [data]);
-
   const handleProfileImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -55,11 +56,27 @@ const UserProfile = () => {
   const handleUpdateProfile = async () => {
     try {
       setUploading(true);
+      
+      // Upload image if a new one is selected
+      let newImageUrl = imageUrl;
+      if (profileImage) {
+        await uploadProfileImage();
+        newImageUrl = imageUrl;
+      }
+
       const { data } = await updateUser({
-        variables: { username, email }
+        variables: { 
+          username, 
+          email,
+          profileImage: newImageUrl
+        }
       });
+
       console.log('Profile updated:', data.updateUser);
       setUploading(false);
+      
+      // Refresh user data after successful update
+      await refreshUser();
     } catch (error) {
       console.error('Error updating profile:', error);
       setUploading(false);
@@ -104,26 +121,13 @@ const UserProfile = () => {
       {imageUrl && <img src={imageUrl} alt="Profile" style={{width: '200px', height: '200px', objectFit: 'cover'}} />}
 
       <div className="button-container">
-        {uploading ? (
-          <p>Uploading...</p>
-        ) : (
-          <button 
-  className="profile-button upload" 
-  onClick={uploadProfileImage}
-  disabled={uploading || !profileImage}
->
-  {uploading ? 'Uploading...' : 'Upload Image'}
-</button>
-        )}
         <button 
-  className="profile-button" 
-  onClick={handleUpdateProfile}
-  disabled={uploading}
->
-  {uploading ? 'Updating...' : 'Update Profile'}
-
-  
-</button>
+          className="profile-button" 
+          onClick={handleUpdateProfile}
+          disabled={uploading}
+        >
+          {uploading ? 'Updating...' : 'Update Profile'}
+        </button>
       </div>
     </div>
   );
