@@ -31,7 +31,10 @@ const BookDetails = () => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  useEffect(()=>{
+    console.log(comments);
+    
+  },[comments])
   const [favoriteBook] = useMutation(FAVORITE_BOOK);
   const [unFavoriteBook] = useMutation(UNFAVORITE_BOOK);
   const [addComment] = useMutation(ADD_COMMENT, {
@@ -48,7 +51,7 @@ const BookDetails = () => {
     }
   });
 
-  const [getBook, { loading: bookLoading, error: bookError }] = useLazyQuery(QUERY_BOOK);
+  const [getBook, { loading: bookLoading, error: bookError, refetch: getBookAgain }] = useLazyQuery(QUERY_BOOK);
 
   const { loading: userLoading, error: userError, data: userData, refetch } = useQuery(QUERY_USER, {
     skip: !isLoggedIn,
@@ -88,7 +91,7 @@ const BookDetails = () => {
       }
     };
     fetchBook();
-  }, [id, getBook]);
+  }, []);
 
   useEffect(() => {
     if (!userLoading && !userError && userData && userData.user) {
@@ -167,10 +170,12 @@ const BookDetails = () => {
         });
         if (data && data.addComment) {
           const newCommentWithId = {
-            ...data.addComment,
-            _id: data.addComment._id
+            ...data.addComment.comments[data.addComment.comments.length -1],
+            _id: data.addComment.comments[data.addComment.comments.length -1]._id
           };
           setComments(prevComments => [...prevComments, newCommentWithId]);
+          // getBookAgain();
+
           setNewComment("");
           toast({
             title: "Comment added",
@@ -179,6 +184,7 @@ const BookDetails = () => {
             duration: 3000,
             isClosable: true,
           });
+          // setTimeout(()=>window.location.reload(), 750)
         }
       } catch (error) {
         console.error("Error adding comment:", error);
@@ -261,14 +267,15 @@ const BookDetails = () => {
         <VStack align="start" spacing={4}>
           <Heading as="h2" size="lg">Comments</Heading>
           {comments.length > 0 ? (
-            comments.map((comment) => (
-              <Box key={comment._id} p={4} borderWidth={1} borderRadius="md" w="full">
+            comments.map((comment) => {
+              console.log(comment);
+             return <Box key={comment._id} p={4} borderWidth={1} borderRadius="md" w="full">
                 <Text>{comment.commentText}</Text>
                 <Text fontSize="sm" color={textColor}>
                   Commented By: {comment.commentAuthor} on {comment.createdAt}
                 </Text>
               </Box>
-            ))
+          })
           ) : (
             <Text>No comments yet.</Text>
           )}
