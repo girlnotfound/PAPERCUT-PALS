@@ -14,17 +14,26 @@ import {
   InputRightElement,
   Image,
   Alert,
-  AlertIcon
+  AlertIcon,
+  Text,
+  HStack,
+  VStack,
+  Icon,
 } from "@chakra-ui/react";
-import Auth from '../utils/auth';
-import { useMutation } from '@apollo/client';
-import { FaUserAlt, FaLock } from "react-icons/fa";
+import {
+  FaUserAlt,
+  FaLock,
+  FaSearch,
+  FaHeart,
+  FaComment,
+} from "react-icons/fa";
+import Auth from "../utils/auth";
+import { useMutation } from "@apollo/client";
 import leftImage from "/images/left_facing_green_glasses.png";
 import rightImage from "/images/right_facing_pink_glasses.png";
 import logo from "/images/PapercutPals_Logo_Letering_only.png";
 import "../styles/style.css";
-import { LOGIN_USER } from '../utils/mutations';
-
+import { LOGIN_USER } from "../utils/mutations";
 
 // create Chakra UI versions of the icon components
 const CFaUserAlt = chakra(FaUserAlt);
@@ -33,9 +42,10 @@ const CFaLock = chakra(FaLock);
 const SignIn = () => {
   // state to toggle password visibility
   const [showPassword, setShowPassword] = useState(false);
-  const [formState, setFormState] = useState({ email: '', password: '' });
-  const [login, { error, data }] = useMutation(LOGIN_USER);
+  const [formState, setFormState] = useState({ email: "", password: "" });
+  const [login, { error }] = useMutation(LOGIN_USER);
   const [alertMessage, setAlertMessage] = useState(null);
+
   // function to handle password visibility toggle
   const handleShowClick = () => setShowPassword(!showPassword);
 
@@ -51,27 +61,31 @@ const SignIn = () => {
   // submit form
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    setAlertMessage(null); // Clear any existing alert
+    setAlertMessage(null); // clear any existing alert
     console.log(formState);
     try {
       const { data } = await login({
         variables: { ...formState },
       });
-  
+
       if (data && data.login && data.login.token) {
         Auth.login(data.login.token);
       } else {
-        setAlertMessage("Invalid credentials. If you're a new user, please sign up first.");
+        setAlertMessage(
+          "Invalid credentials. If you're a new user, please sign up first."
+        );
       }
     } catch (e) {
       console.error(e);
-      setAlertMessage("Invalid credentials. If you're a new user, please sign up first.");
+      setAlertMessage(
+        "Invalid credentials. If you're a new user, please sign up first."
+      );
     }
-  
+
     // clear form values
     setFormState({
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     });
   };
 
@@ -83,11 +97,24 @@ const SignIn = () => {
       alignItems="center"
       bgGradient="linear(-20deg, #d558c8 0%, #24d292 100%)"
     >
+      {/* about us link */}
+      <Box position="absolute" top={4} right={4}>
+        <Link
+          href="/about-us"
+          color="white"
+          fontSize="lg"
+          fontWeight="bold"
+          _hover={{ color: "#929aab" }}
+        >
+          About Us
+        </Link>
+      </Box>
+
       {/* logo */}
       <Box
         className="logo-container"
         position="absolute"
-        top="50px"
+        top="30px"
         left="50%"
         transform="translateX(-50%)"
         zIndex="1"
@@ -96,9 +123,42 @@ const SignIn = () => {
           className="logo"
           src={logo}
           alt="PapercutPals Logo"
-          width="auto"
+          width="490px"
           height="auto"
         />
+      </Box>
+
+      {/* site description */}
+      <Box
+        className="site-description"
+        position="absolute"
+        top="160px"
+        left="50%"
+        transform="translateX(-50%)"
+        zIndex="1"
+        width="100%"
+        textAlign="center"
+      >
+        <Text color="white" fontSize="xl" mb={6}>
+          Connect with fellow book lovers, track your favorites, and share your
+          thoughts!
+        </Text>
+
+        {/* key features */}
+        <HStack spacing={12} mb={8} justifyContent="center">
+          <VStack>
+            <Icon as={FaSearch} color="white" boxSize={8} />
+            <Text color="white">Search Books</Text>
+          </VStack>
+          <VStack>
+            <Icon as={FaHeart} color="white" boxSize={8} />
+            <Text color="white">Add Favorites</Text>
+          </VStack>
+          <VStack>
+            <Icon as={FaComment} color="white" boxSize={8} />
+            <Text color="white">Share Thoughts</Text>
+          </VStack>
+        </HStack>
       </Box>
 
       {/* right image */}
@@ -132,7 +192,7 @@ const SignIn = () => {
           <Box className="form-wrapper" width="100%">
             {" "}
             {(error || alertMessage) && (
-              <Alert status='error' mb={4}>
+              <Alert status="error" mb={4}>
                 <AlertIcon />
                 {alertMessage}
               </Alert>
