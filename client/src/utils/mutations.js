@@ -36,10 +36,24 @@ export const UPDATE_USER = gql`
 
 
 export const ADD_COMMENT = gql`
-  mutation addComment($favoriteBookId: ID!, $commentText: String!) {
-    addComment(favoriteBookId: $favoriteBookId, commentText: $commentText) {
+  mutation addComment($bookId: String!, $commentText: String!) {
+    addComment(bookId: $bookId, commentText: $commentText) {
       comments {
         _id
+        commentAuthor
+        commentText
+        createdAt
+      }
+    }
+  }
+`;
+
+export const REMOVE_COMMENT = gql`
+  mutation removeComment($bookId: ID!, $commentText: String!) {
+    removeComment(bookId: $bookId, commentText: $commentText) {
+      comments {
+        _id
+        commentAuthor
         commentText
         createdAt
       }
@@ -49,19 +63,44 @@ export const ADD_COMMENT = gql`
 
 
 export const ADD_BOOK = gql`
-  mutation addBook($title: String!, $author: String!, $genre: String!, $synopsis: String!, $publisher: String!) {
-    addBook(title: $title, author: $author, genre: $genre, synopsis: $synopsis, publisher: $publisher) {
+  mutation addBook($_id: String!, $title: String!, $imageLink: String!, $author: String!, $genre: String!, $description: String!, $publisher: String!, $published: String!) {
+    addBook(_id: $_id, title: $title, imageLink: $imageLink, author: $author, genre: $genre, description: $description, publisher: $publisher, published: $published) {
       _id
-      favoredBy
       title
+      imageLink
       author
       genre
-      synopsis
+      description
       publisher
+      published
       createdAt
       comments {
         _id
+        commentAuthor
         commentText
+        createdAt
+      }
+    }
+  }
+`;
+
+export const FAVORITE_BOOK = gql`
+  mutation favoriteBook($favoriteBookId: String!) {
+    favoriteBook(favoriteBookId: $favoriteBookId) {
+      username
+      favoriteBooks {
+        _id
+      }
+    }
+  }
+`;
+
+export const UNFAVORITE_BOOK = gql`
+  mutation unFavoriteBook($favoriteBookId: String!) {
+    unFavoriteBook(favoriteBookId: $favoriteBookId) {
+      username
+      favoriteBooks {
+        _id
       }
     }
   }

@@ -25,6 +25,10 @@ const SearchBar = ({ onSearch }) => {
   const handleFilterChange = (option) => {
     setFilterOption(option);
     setIsOpen(false);
+    if (option === "All") {
+      setSearchQuery("");
+      onSearch("", "All");
+    }
   };
 
   const handleSearchChange = (event) => {
@@ -33,7 +37,7 @@ const SearchBar = ({ onSearch }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (searchQuery) {
+    if (filterOption !== "All" && searchQuery) {
       onSearch(searchQuery, filterOption);
     }
   };
@@ -63,11 +67,12 @@ const SearchBar = ({ onSearch }) => {
           </Box>
         </InputLeftAddon>
         <Input
-          placeholder={`Search by ${filterOption.toLowerCase()}...`}
+          placeholder={filterOption === "All" ? "Showing all books" : `Search by ${filterOption.toLowerCase()}...`}
           value={searchQuery}
           onChange={handleSearchChange}
           borderRadius={0}
           bg="white"
+          isDisabled={filterOption === "All"}
         />
         <InputRightAddon p={0} bg="white">
           <Button
@@ -77,12 +82,14 @@ const SearchBar = ({ onSearch }) => {
             height="100%"
             bg="white"
             _hover={{ bg: "gray.100" }}
+            isDisabled={filterOption === "All"}
           >
             Search
           </Button>
         </InputRightAddon>
       </InputGroup>
     </form>
-  )}
+  );
+};
 
-  export default SearchBar;
+export default SearchBar;
