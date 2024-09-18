@@ -244,14 +244,20 @@ const BookDetails = () => {
       });
     }
   };
+  
+  const bgGradient = useColorModeValue(
+    "linear-gradient(-20deg, #D558C8 0%, #24D292 100%)",
+    "linear-gradient(-20deg, #D558C8 0%, #24D292 100%)"
+  );
+  
 
   if (bookLoading || userLoading) return <Box>Loading...</Box>;
   if (bookError || userError) return <Box>Error: {(bookError || userError).message}</Box>;
   if (!book) return <Box>No book found</Box>;
 
   return (
-    <Container maxW="container.xl" py={10}>
-      <Box bg={bgColor} p={6} borderRadius="lg" boxShadow={boxShadow}>
+    <Container maxW="container.xl" py={10} bg={bgGradient}>
+      <Box bg="#edf2f7" p={6} borderRadius="lg" boxShadow={boxShadow}>
       <Flex direction={{ base: "column", md: "row" }} gap={8}>
         <Box flex={1}>
           <Image
@@ -316,9 +322,9 @@ const BookDetails = () => {
         <Heading as="h3" size="md">Comments</Heading>
           {comments.length > 0 ? (
             comments.map((comment) => (
-              <Box key={comment._id} p={2} bg="gray.100" borderRadius="md" width="100%">
+              <Box key={comment._id} p={2} bg="gray.100" borderRadius="md" width="100%" boxShadow='xl' border="1px solid" borderColor='#aaabad'>
                 <Text>{comment.commentText}</Text>
-                <Text fontSize="sm" color="gray.500">
+                <Text fontSize="sm" color="gray.500" >
                   Commented By: {comment.commentAuthor} on {comment.createdAt}
                 </Text>
                 {AuthService.loggedIn() && AuthService.getProfile().data.username === comment.commentAuthor && (
@@ -336,6 +342,7 @@ const BookDetails = () => {
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Add a comment..."
             size="sm"
+            boxShadow='xl' border="1px solid" borderColor='#aaabad'
           />
           <Button onClick={handleAddComment}>Add Comment</Button>
         </VStack>

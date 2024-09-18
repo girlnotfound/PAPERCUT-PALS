@@ -12,6 +12,7 @@ const Footer = () => {
       p={4}
       bgGradient="linear(to-r, #d558c8, #24d292)"
       color="white"
+      borderTop="1px solid" borderColor='black'
     >
       <VStack spacing={2}>
         <Text fontSize="sm" fontWeight="bold">
