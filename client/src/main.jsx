@@ -13,6 +13,7 @@ import App from "./App";
 import ErrorPage from "./pages/Error";
 import Homepage from "./pages/Homepage";
 import Library from "./pages/Library";
+import PaperClip from "./pages/PaperClip";
 import MyFavorites from "./pages/MyFavorites";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
@@ -39,6 +40,10 @@ const routerConfig = [
       { path: "/UserProfile", element: <UserProfile />},
       { path: "/book/:id", element: <BookDetails /> },
       { path: "/SearchBaR", element: <SearchBar /> },
+      { 
+        path: "/paperclip", 
+        element: <PaperClip /> 
+      },
     ],
   },
 ];

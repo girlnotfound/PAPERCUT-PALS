@@ -34,7 +34,6 @@ const client = new ApolloClient({
 });
 
 
-
 function App() {
   const location = useLocation();
 
