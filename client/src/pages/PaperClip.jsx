@@ -65,7 +65,8 @@ const PaperClip = () => {
     
     try {
       // Limit the number of favorite books to mention
-      const favoriteBookTitles = favorites.slice(0, 3).map(book => book.title).join(', ');
+      const favoriteBookTitles = favorites.map(book => book.title).join(', ');
+      console.log(favoriteBookTitles);
       let greetMessage;
       console.log(responses.length);
       if(responses.length == 0){
@@ -74,7 +75,7 @@ const PaperClip = () => {
         greetMessage = "Do not greet the user"
       }
       
-      const systemContent = `You are Sir PaperClip, a book expert of PaperCut Pals (a book search web app). Keep it short, accurate and conversational. The user is: ${username}, ${greetMessage} The user's favorite books: ${favoriteBookTitles}. Focus on books.`;
+      const systemContent = `You are Sir PaperClip, a book expert of PaperCut Pals (a book search web app). Keep it short, accurate and conversational. The user is: ${username}, ${greetMessage} The user's favorite books: ${favoriteBookTitles}. Focus on books and politely decline to answer otherwise.`;
 
       const response = await axios.post(API_URL, {
         model: "mistral-7b-instruct",
