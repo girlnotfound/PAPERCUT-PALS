@@ -319,7 +319,7 @@ const BookDetails = () => {
 
       <Divider my={8} />
         <VStack align="start" spacing={4}>
-        <Heading as="h3" size="md">Comments</Heading>
+        <Heading as="h3" size="md">{book.commentCount} Comments</Heading>
           {comments.length > 0 ? (
             comments.map((comment) => (
               <Box key={comment._id} p={2} bg="gray.100" borderRadius="md" width="100%" boxShadow='xl' border="1px solid" borderColor='#aaabad'>
