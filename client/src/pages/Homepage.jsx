@@ -52,7 +52,12 @@ const BookOfTheMonth = () => {
 
   useEffect(() => {
     if (booksData && booksData.books) {
-      setFeaturedBooks(booksData.books.slice(0, 3));
+      // Replace these IDs with the actual IDs of the books you want to feature
+      const featuredBookIds = ["KuYjyCkM2V4C", "GZAoAQAAIAAJ", "bIZiAAAAMAAJ"];
+      const selectedBooks = booksData.books.filter((book) =>
+        featuredBookIds.includes(book._id)
+      );
+      setFeaturedBooks(selectedBooks);
     }
   }, [booksData]);
 
