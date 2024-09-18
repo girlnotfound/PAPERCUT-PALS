@@ -180,7 +180,7 @@ const BookOfTheMonth = () => {
               overflow="hidden"
               boxShadow="xl"
             >
-              <Box bg="#4e5a6b" p={4}>
+              <Box bg="#5f7688" p={4}>
                 <Heading as="h2" size="md" color="white" mb={4}>
                   Featured Book {index + 1}
                 </Heading>
