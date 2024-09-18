@@ -47,9 +47,14 @@ const resolvers = {
       return { token, user };
     },
 
-    updateUser: async (parent, args, context) => {
+    updateUser: async (parent, { username, email, profileImage }, context) => {
       if (context.user) {
-        return await User.findByIdAndUpdate(context.user._id, args, { new: true });
+        const updatedUser = await User.findByIdAndUpdate(
+          context.user._id,
+          { username, email, profileImage },
+          { new: true }
+        );
+        return updatedUser;
       }
       throw AuthenticationError;
     },

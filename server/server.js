@@ -32,13 +32,14 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // File upload route
-app.post('/api/upload', upload.single('profileImage'), (req, res) => {
+app.post('/api/upload/:userid', upload.single('profileImage'), (req, res) => {
   console.log('Received upload request');
   if (!req.file) {
     console.log('No file uploaded');
     return res.status(400).json({ error: 'No file uploaded.' });
   }
   console.log('File uploaded:', req.file.filename);
+  
   res.json({ message: 'File uploaded successfully', filename: req.file.filename });
 });
 

@@ -5,6 +5,7 @@ const typeDefs = `
     email: String
     password: String
     favoriteBooks: [Book]!
+    profileImage: String
   }
 
   type Book {
@@ -50,7 +51,7 @@ const typeDefs = `
     unFavoriteBook(favoriteBookId: String!): User
     deleteBook(bookId: String!): Book
     removeComment(bookId: String!, commentId: ID!): Book
-    updateUser(username: String, email: String): User
+    updateUser(username: String, email: String, profileImage: String): User
   }
 `;
 
