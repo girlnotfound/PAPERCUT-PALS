@@ -175,7 +175,10 @@ const BookDetails = () => {
             _id: data.addComment.comments[data.addComment.comments.length -1]._id
           };
           setComments(prevComments => [...prevComments, newCommentWithId]);
-          // getBookAgain();
+          setBook(prevBook => ({
+            ...prevBook,
+            commentCount: (prevBook.commentCount || 0) + 1
+          }));
 
           setNewComment("");
           toast({
@@ -227,6 +230,11 @@ const BookDetails = () => {
         refetchQueries: [{ query: QUERY_BOOK, variables: { bookId: id } }]
       });
       setComments(prevComments => prevComments.filter(comment => comment._id !== commentId));
+      setBook(prevBook => ({
+        ...prevBook,
+        commentCount: Math.max((prevBook.commentCount || 0) - 1, 0)
+      }));
+
       toast({
         title: "Comment removed",
         status: "success",
