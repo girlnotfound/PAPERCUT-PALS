@@ -6,10 +6,8 @@ export const QUERY_USER = gql`
       _id
       username
       email
-      thoughts {
+      favoriteBooks {
         _id
-        thoughtText
-        createdAt
       }
     }
   }
@@ -21,10 +19,8 @@ export const QUERY_USERS = gql`
       _id
       username
       email
-      thoughts {
+      favoriteBooks {
         _id
-        thoughtText
-        createdAt
       }
     }
   }
@@ -32,14 +28,22 @@ export const QUERY_USERS = gql`
 
 export const QUERY_BOOKS = gql`
   query getBooks {
-    favoriteBooks {
+    books {
       _id
-      favoredBy
       title
+      imageLink
       author
-      thoughtText
-      thoughtAuthor
+      genre
+      description
+      publisher
+      published
       createdAt
+      comments {
+        _id
+        commentAuthor
+        commentText
+        createdAt
+      }
     }
   }
 `;
@@ -55,3 +59,37 @@ export const QUERY_ME = gql`
   }
 `;
 
+export const QUERY_BOOK = gql`
+  query getBook($bookId: String!) {
+    book(bookId: $bookId) {
+      _id
+      title
+      imageLink
+      author
+      genre
+      description
+      publisher
+      published
+      createdAt
+      comments {
+        _id
+        commentAuthor
+        commentText
+        createdAt
+      }
+    }
+  }
+`;
+
+export const QUERY_FAVORITEBOOKS = gql`
+  query getFavoriteBooks($username: String!) {
+    favoriteBooks(username: $username) {
+      _id
+      username
+      email
+      favoriteBooks {
+        _id
+      }
+    }
+  }
+`;

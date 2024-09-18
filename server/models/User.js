@@ -24,8 +24,8 @@ const userSchema = new Schema({
   },
   favoriteBooks: [
     {
-      type: Schema.Types.ObjectId,
-      ref: 'FavoriteBook',
+      type: String,
+      ref: 'Book',
     },
   ],
 });

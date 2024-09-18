@@ -31,9 +31,9 @@ const UserProfile = () => {
   
     try {
       setUploading(true);
-      const response = await axios.post('http://localhost:3001/api/upload', formData, {
+      const response = await axios.post(`http://localhost:3001/api/upload/${user._id}`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'multipart/form-data',
         },
         withCredentials: true
       });
