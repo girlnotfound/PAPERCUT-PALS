@@ -17,8 +17,8 @@ const BookCard2 = ({
   addToFavorites,
   removeFromFavorites,
   isFavorite,
-  imageHeight = "300px",
-  boxWidth = "200px",
+  imageHeight = "400px",
+  boxWidth = "260px",
   onClick,
 }) => {
   const handleFavoriteClick = (e) => {
