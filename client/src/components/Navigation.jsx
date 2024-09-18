@@ -44,7 +44,7 @@ const NavLink = ({ children, to }) => {
       }}
       to={to}
       fontWeight="medium"
-      color="white"
+      color="black"
     >
       {children}
     </Box>
@@ -65,9 +65,10 @@ export default function Navigation() {
   return (
     <>
       <Box
-        bgGradient="linear(to-r, #d558c8, #24d292)"
+        bg="#edf2f7"
         px={4}
         boxShadow="0 4px 6px rgba(0, 0, 0, 0.1)"
+        borderY="2px solid" borderColor='#aaabad'
       >
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <IconButton
@@ -95,7 +96,7 @@ export default function Navigation() {
           </HStack>
           <Flex alignItems={"center"}>
             {user && (
-              <Text color="white" fontWeight="medium" mr={2}>
+              <Text color="black" fontWeight="medium" mr={2}>
                 {user.username}
               </Text>
             )}
