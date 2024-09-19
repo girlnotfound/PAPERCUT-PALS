@@ -126,6 +126,11 @@ On a book's detail page, you can:
 - Click on your avatar icon to access profile settings or log out
 About Page:
 - Learn more about the developers and the project by visiting the About page
+#### To use PaperClip AI Assistant:
+- Ensure you are logged in to access the PaperClip interface.
+- Type your question or comment in the input field at the bottom of the screen.
+- Click the "Get Response" button or press Enter to submit your query.
+- Wait for Sir PaperClip to generate and display a response.
 
 ## Features
 #### Book Discovery
@@ -149,6 +154,15 @@ About Page:
 #### Community Engagement
 - Comment system allowing users to share thoughts and discuss books
 - User-friendly interface for leaving and viewing comments on book detail pages
+#### PaperClip AI Assistant
+PaperClip is an AI-powered chatbot integrated into the PaperCut Pals book search web app. This feature enhances user experience by providing:
+- Personalized book recommendations based on user's favorite books
+- Instant responses to book-related queries
+- Conversational interface for engaging discussions about literature
+- Access to a vast knowledge base of books and authors
+- Real-time, context-aware interactions tailored to each user
+
+PaperClip utilizes advanced natural language processing to deliver accurate and relevant information, making it an invaluable tool for book enthusiasts and casual readers alike.
 #### Responsive Design
 - Polished UI that adapts to various screen sizes for optimal viewing on different devices
 #### Navigation
