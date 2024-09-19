@@ -7,7 +7,6 @@ import {
 import "./styles/style.css";
 import { ChakraProvider } from "@chakra-ui/react";
 
-
 // component imports
 import App from "./App";
 import ErrorPage from "./pages/Error";
@@ -17,11 +16,10 @@ import PaperClip from "./pages/PaperClip";
 import MyFavorites from "./pages/MyFavorites";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
-import AboutUs from './pages/AboutUS';
-import UserProfile from './pages/UserProfile';
-import BookDetails from './pages/BookDetails';
+import AboutUs from "./pages/AboutUs";
+import UserProfile from "./pages/UserProfile";
+import BookDetails from "./pages/BookDetails";
 import SearchBar from "./components/SearchBar";
-
 
 // router configuration
 const routerConfig = [
@@ -35,14 +33,14 @@ const routerConfig = [
       { path: "/homepage", element: <Homepage /> },
       { path: "/library", element: <Library /> },
       { path: "/my-favorites", element: <MyFavorites /> },
-      { path: "/signup", element: <SignUp />},
-      { path: "/about-us", element: <AboutUs />},
-      { path: "/UserProfile", element: <UserProfile />},
+      { path: "/signup", element: <SignUp /> },
+      { path: "/about-us", element: <AboutUs /> },
+      { path: "/UserProfile", element: <UserProfile /> },
       { path: "/book/:id", element: <BookDetails /> },
       { path: "/SearchBaR", element: <SearchBar /> },
-      { 
-        path: "/paperclip", 
-        element: <PaperClip /> 
+      {
+        path: "/paperclip",
+        element: <PaperClip />,
       },
     ],
   },
