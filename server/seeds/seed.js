@@ -14,17 +14,19 @@ const fetchBooks = async (genre) => {
         printType: 'books'
       }
     });
-    return response.data.items.map(book => ({
-      _id: book.id,
-      title: book.volumeInfo.title,
-      imageLink: book.volumeInfo.imageLinks?.thumbnail || "https://via.placeholder.com/128x192",
-      author: book.volumeInfo.authors?.[0] || 'Unknown Author',
-      genre: genre,
-      description: book.volumeInfo.description || 'No description available',
-      publisher: book.volumeInfo.publisher || 'Unknown Publisher',
-      published: book.volumeInfo.publishedDate || 'Unknown',
-      comments: []
-    }));
+    return response.data.items
+      .filter(book => book.volumeInfo.imageLinks && book.volumeInfo.imageLinks.thumbnail && book.volumeInfo.imageLinks.thumbnail !== "https://via.placeholder.com/128x192")
+      .map(book => ({
+        _id: book.id,
+        title: book.volumeInfo.title,
+        imageLink: book.volumeInfo.imageLinks.thumbnail,
+        author: book.volumeInfo.authors?.[0] || 'Unknown Author',
+        genre: genre,
+        description: book.volumeInfo.description || 'No description available',
+        publisher: book.volumeInfo.publisher || 'Unknown Publisher',
+        published: book.volumeInfo.publishedDate || 'Unknown',
+        comments: []
+      }));
   } catch (error) {
     console.error('Error fetching books:', error);
     return [];
@@ -41,17 +43,19 @@ const fetchBooksByAuthor = async (author) => {
         printType: 'books'
       }
     });
-    return response.data.items.map(book => ({
-      _id: book.id,
-      title: book.volumeInfo.title,
-      imageLink: book.volumeInfo.imageLinks?.thumbnail || "https://via.placeholder.com/128x192",
-      author: book.volumeInfo.authors?.[0] || 'Unknown Author',
-      genre: book.volumeInfo.categories?.join(", ") || "Unknown",
-      description: book.volumeInfo.description || 'No description available',
-      publisher: book.volumeInfo.publisher || 'Unknown Publisher',
-      published: book.volumeInfo.publishedDate || 'Unknown',
-      comments: []
-    }));
+    return response.data.items
+      .filter(book => book.volumeInfo.imageLinks && book.volumeInfo.imageLinks.thumbnail && book.volumeInfo.imageLinks.thumbnail !== "https://via.placeholder.com/128x192")
+      .map(book => ({
+        _id: book.id,
+        title: book.volumeInfo.title,
+        imageLink: book.volumeInfo.imageLinks.thumbnail,
+        author: book.volumeInfo.authors?.[0] || 'Unknown Author',
+        genre: book.volumeInfo.categories?.join(", ") || "Unknown",
+        description: book.volumeInfo.description || 'No description available',
+        publisher: book.volumeInfo.publisher || 'Unknown Publisher',
+        published: book.volumeInfo.publishedDate || 'Unknown',
+        comments: []
+      }));
   } catch (error) {
     console.error('Error fetching books:', error);
     return [];
@@ -93,17 +97,19 @@ const fetchBooksByTitle = async (title) => {
         printType: 'books'
       }
     });
-    return response.data.items.map(book => ({
-      _id: book.id,
-      title: book.volumeInfo.title,
-      imageLink: book.volumeInfo.imageLinks?.thumbnail || "https://via.placeholder.com/128x192",
-      author: book.volumeInfo.authors?.[0] || 'Unknown Author',
-      genre: book.volumeInfo.categories?.join(", ") || "Unknown",
-      description: book.volumeInfo.description || 'No description available',
-      publisher: book.volumeInfo.publisher || 'Unknown Publisher',
-      published: book.volumeInfo.publishedDate || 'Unknown',
-      comments: []
-    }));
+    return response.data.items
+      .filter(book => book.volumeInfo.imageLinks && book.volumeInfo.imageLinks.thumbnail && book.volumeInfo.imageLinks.thumbnail !== "https://via.placeholder.com/128x192")
+      .map(book => ({
+        _id: book.id,
+        title: book.volumeInfo.title,
+        imageLink: book.volumeInfo.imageLinks.thumbnail,
+        author: book.volumeInfo.authors?.[0] || 'Unknown Author',
+        genre: book.volumeInfo.categories?.join(", ") || "Unknown",
+        description: book.volumeInfo.description || 'No description available',
+        publisher: book.volumeInfo.publisher || 'Unknown Publisher',
+        published: book.volumeInfo.publishedDate || 'Unknown',
+        comments: []
+      }));
   } catch (error) {
     console.error('Error fetching books:', error);
     return [];
