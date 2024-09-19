@@ -53,10 +53,15 @@ const BookOfTheMonth = () => {
   useEffect(() => {
     if (booksData && booksData.books) {
       // Replace these IDs with the actual IDs of the books you want to feature
-      const featuredBookIds = ["KuYjyCkM2V4C", "_oaAHiFOZmgC", "bIZiAAAAMAAJ"];
-      const selectedBooks = booksData.books.filter((book) =>
-        featuredBookIds.includes(book._id)
-      );
+      const featuredBookIds = ["J.K. Rowling", "George R.R. Martin", "Christopher Paolini"];
+      const selectedBooks = [];
+      
+      for (const title of featuredBookIds) {
+        const book = booksData.books.find(book => book.author.toLowerCase() === title.toLowerCase());
+        if (book) {
+          selectedBooks.push(book);
+        }
+      }
       setFeaturedBooks(selectedBooks);
     }
   }, [booksData]);

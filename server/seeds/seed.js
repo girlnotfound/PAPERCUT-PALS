@@ -14,7 +14,6 @@ const fetchBooks = async (genre) => {
         printType: 'books'
       }
     });
-
     return response.data.items.map(book => ({
       _id: book.id,
       title: book.volumeInfo.title,
@@ -42,7 +41,6 @@ const fetchBooksByAuthor = async (author) => {
         printType: 'books'
       }
     });
-
     return response.data.items.map(book => ({
       _id: book.id,
       title: book.volumeInfo.title,
@@ -73,9 +71,7 @@ const createMockUsers = async () => {
     { username: 'FrankSinatra', email: 'frank@example.com', password: 'myway' },
     { username: 'GraceHopper', email: 'grace@example.com', password: 'compiler' }
   ];
-
   const createdUsers = [];
-
   for (const user of mockUsers) {
     const newUser = await User.create({
       username: user.username,
@@ -84,7 +80,6 @@ const createMockUsers = async () => {
     });
     createdUsers.push(newUser);
   }
-
   return createdUsers;
 };
 
@@ -98,7 +93,6 @@ const fetchBooksByTitle = async (title) => {
         printType: 'books'
       }
     });
-
     return response.data.items.map(book => ({
       _id: book.id,
       title: book.volumeInfo.title,
@@ -110,7 +104,6 @@ const fetchBooksByTitle = async (title) => {
       published: book.volumeInfo.publishedDate || 'Unknown',
       comments: []
     }));
-
   } catch (error) {
     console.error('Error fetching books:', error);
     return [];
@@ -145,7 +138,6 @@ const addMockComments = async (books, users) => {
     "The plot twists were unexpected and brilliantly executed.",
     "A comfort read that I'll return to again and again."
   ];
-
   for (const book of books) {
     for (let i = 0; i < 3; i++) {
       const randomUser = users[Math.floor(Math.random() * users.length)];
@@ -206,7 +198,6 @@ db.once('open', async () => {
         }
       }
     }
-
 
     const users = await createMockUsers();
     await addMockComments(allBooks, users);
