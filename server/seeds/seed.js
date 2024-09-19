@@ -88,6 +88,35 @@ const createMockUsers = async () => {
   return createdUsers;
 };
 
+const fetchBooksByTitle = async (title) => {
+  try {
+    const response = await axios.get('https://www.googleapis.com/books/v1/volumes', {
+      params: {
+        q: `intitle:${title}`,
+        maxResults: 40,
+        orderBy: 'relevance',
+        printType: 'books'
+      }
+    });
+
+    return response.data.items.map(book => ({
+      _id: book.id,
+      title: book.volumeInfo.title,
+      imageLink: book.volumeInfo.imageLinks?.thumbnail || "https://via.placeholder.com/128x192",
+      author: book.volumeInfo.authors?.[0] || 'Unknown Author',
+      genre: book.volumeInfo.categories?.join(", ") || "Unknown",
+      description: book.volumeInfo.description || 'No description available',
+      publisher: book.volumeInfo.publisher || 'Unknown Publisher',
+      published: book.volumeInfo.publishedDate || 'Unknown',
+      comments: []
+    }));
+
+  } catch (error) {
+    console.error('Error fetching books:', error);
+    return [];
+  }
+};
+
 const bookExists = async (bookId) => {
   const existingBook = await Book.findOne({ _id: bookId });
   return !!existingBook;
@@ -138,6 +167,7 @@ db.once('open', async () => {
 
     const genres = ['fiction', 'nonfiction', 'romance', 'horror', 'fantasy', 'adventure', 'biographies'];
     const authors = ['J.K. Rowling', 'George R.R. Martin', 'Stephen King', 'Agatha Christie', 'Jane Austen'];
+    const titles = ['Eldest', 'Harry Potter and The Deathly Hollows', 'A Game of Thrones'];
 
     let allBooks = [];
 
@@ -155,6 +185,18 @@ db.once('open', async () => {
 
     for (let i = 0; i < authors.length; i++) {
       const data = await fetchBooksByAuthor(authors[i]);
+      for (const bookData of data) {
+        if (!(await bookExists(bookData._id))) {
+          const createdBook = await Book.create(bookData);
+          allBooks.push(createdBook);
+        } else {
+          console.log(`Book with ID ${bookData._id} already exists. Skipping.`);
+        }
+      }
+    }
+
+    for (let i = 0; i < titles.length; i++) {
+      const data = await fetchBooksByTitle(titles[i]);
       for (const bookData of data) {
         if (!(await bookExists(bookData._id))) {
           const createdBook = await Book.create(bookData);
