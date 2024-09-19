@@ -252,6 +252,7 @@ const BookDetails = () => {
       });
     }
   };
+  console.log(book);
   
   const bgGradient = useColorModeValue(
     "linear-gradient(-20deg, #D558C8 0%, #24D292 100%)",
