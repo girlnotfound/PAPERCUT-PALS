@@ -6,6 +6,7 @@ import {
   VStack,
   Center,
   useToast,
+  Text
 } from "@chakra-ui/react";
 import BookCard from "../components/BookCard";
 import { FAVORITE_BOOK, UNFAVORITE_BOOK } from "../utils/mutations";
@@ -20,7 +21,6 @@ const Library = () => {
   const [searchParams, setSearchParams] = useState({
     query: "",
     filter: "Genre",
-    defaultGenre: "Fantasy",
   });
 
   const toast = useToast();
@@ -52,24 +52,11 @@ const Library = () => {
     try {
       let filteredBooks = data?.books || [];
 
-      if (searchParams.filter === "Genre" && searchParams.query) {
-        filteredBooks = filteredBooks.filter((book) =>
-          book.genre.toLowerCase().includes(searchParams.query.toLowerCase())
-        );
-      } else if (searchParams.filter === "Title" && searchParams.query) {
-        filteredBooks = filteredBooks.filter((book) =>
-          book.title.toLowerCase().includes(searchParams.query.toLowerCase())
-        );
-      } else if (searchParams.filter === "Author" && searchParams.query) {
-        filteredBooks = filteredBooks.filter((book) =>
-          book.author.toLowerCase().includes(searchParams.query.toLowerCase())
-        );
-      } else if (searchParams.defaultGenre) {
-        filteredBooks = filteredBooks.filter((book) =>
-          book.genre
-            .toLowerCase()
-            .includes(searchParams.defaultGenre.toLowerCase())
-        );
+      if (searchParams.query) {
+        filteredBooks = filteredBooks.filter((book) => {
+          const searchField = book[searchParams.filter.toLowerCase()];
+          return searchField.toLowerCase().includes(searchParams.query.toLowerCase());
+        });
       }
 
       setBooks(filteredBooks);
@@ -105,7 +92,7 @@ const Library = () => {
   }, [toast]);
 
   const handleSearch = (query, filter) => {
-    setSearchParams({ query, filter, defaultGenre: "" });
+    setSearchParams({ query, filter });
   };
 
   const addToFavorites = async (book) => {
@@ -191,7 +178,8 @@ const Library = () => {
           </Box>
         </Center>
         <SimpleGrid columns={[1, 2, 3, 4, 5]} spacing={1}>
-          {books.map((book) => (
+        {books && books.length > 0 ? (
+          books.map((book) => (
             <BookCard
               key={book._id}
               book={book}
@@ -201,7 +189,10 @@ const Library = () => {
               imageHeight="440px"
               boxWidth="300px"
             />
-          ))}
+          ))
+        ) : (
+            <Text color={"white"}>No Results Found!</Text>
+        )}
         </SimpleGrid>
       </VStack>
     </Box>

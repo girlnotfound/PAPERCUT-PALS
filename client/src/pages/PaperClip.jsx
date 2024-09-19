@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Box, Button, Input, Spinner, VStack, HStack, useToast } from '@chakra-ui/react';
 import AuthService from "../utils/auth";
 import { QUERY_BOOK, QUERY_USER } from "../utils/queries";
-
+import Header from '../components/Header';
 const PaperClip = () => {
 
  if (!AuthService.loggedIn()) {
@@ -70,9 +70,9 @@ const PaperClip = () => {
       let greetMessage;
       console.log(responses.length);
       if(responses.length == 0){
-        greetMessage = "Greet the user"
+        greetMessage = "Greet the user and introduce yourself."
       }else{
-        greetMessage = "Do not greet the user"
+        greetMessage = "Do not greet the user."
       }
       
       const systemContent = `You are Sir PaperClip, a book expert of PaperCut Pals (a book search web app). Keep it short, accurate and conversational. The user is: ${username}, ${greetMessage} The user's favorite books: ${favoriteBookTitles}. Focus on books and politely decline to answer otherwise.`;
@@ -133,6 +133,7 @@ const PaperClip = () => {
   return (
     <Box display="flex" flexDirection="column" alignItems="center" width="100%" maxWidth="800px" mx="auto" p={4} minHeight={'72vh'}>
       <VStack spacing={4} width="100%" align="stretch">
+        <Header/>
         {questions.map((q, i) => (
           <VStack key={i} spacing={2} align="stretch">
             <HStack justify="flex-start">
@@ -171,6 +172,7 @@ const PaperClip = () => {
             value={currentQuestion}
             onChange={(e) => setCurrentQuestion(e.target.value)}
             mb={2}
+            required
           />
           <Button 
             type="submit"

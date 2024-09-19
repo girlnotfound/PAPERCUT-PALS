@@ -208,6 +208,7 @@ const BookOfTheMonth = () => {
                       {comment.commentAuthor === currentUsername && (
                         <Button
                           size="xs"
+                          colorScheme='teal'
                           onClick={() =>
                             handleRemoveComment(book._id, comment._id)
                           }
