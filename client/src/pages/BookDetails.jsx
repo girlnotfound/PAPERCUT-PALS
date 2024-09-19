@@ -256,7 +256,13 @@ const BookDetails = () => {
   if (!book) return <Box>No book found</Box>;
 
   return (
-    <Container maxW="container.xl" py={10} bg={bgGradient}>
+    <Box
+    width="100%"
+    minHeight="100vh"
+    bgGradient={bgGradient}
+    paddingY={8}
+    >
+    <Container maxW="container.xl" py={10} >
       <Box bg="#edf2f7" p={6} borderRadius="lg" boxShadow={boxShadow}>
       <Flex direction={{ base: "column", md: "row" }} gap={8}>
         <Box flex={1}>
@@ -348,6 +354,7 @@ const BookDetails = () => {
         </VStack>
       </Box>
     </Container>
+    </Box>
   );
 };
 
