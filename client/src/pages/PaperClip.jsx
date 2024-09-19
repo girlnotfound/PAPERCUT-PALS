@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useLazyQuery } from "@apollo/client";
 import axios from 'axios';
-import { Box, Button, Input, Spinner, VStack, HStack, useToast } from '@chakra-ui/react';
+import { Box, Button, Input, Spinner, VStack, HStack, useToast, Image } from '@chakra-ui/react';
 import AuthService from "../utils/auth";
 import { QUERY_BOOK, QUERY_USER } from "../utils/queries";
 import Header from '../components/Header';
@@ -133,7 +133,12 @@ const PaperClip = () => {
   return (
     <Box display="flex" flexDirection="column" alignItems="center" width="100%" maxWidth="800px" mx="auto" p={4} minHeight={'72vh'}>
       <VStack spacing={4} width="100%" align="stretch">
-        <Header/>
+        <Box>
+          <Image 
+  src='../images/Sirpaperclip2.jpg' 
+  alt='Image with transparent background'
+/>
+        </Box> 
         {questions.map((q, i) => (
           <VStack key={i} spacing={2} align="stretch">
             <HStack justify="flex-start">
