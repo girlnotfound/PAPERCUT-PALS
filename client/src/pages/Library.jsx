@@ -16,6 +16,9 @@ import SearchBar from "../components/SearchBar";
 import AuthService from "../utils/auth";
 
 const Library = () => {
+  if (!AuthService.loggedIn()) {
+    window.location.assign("/signin");
+    }
   const [favorites, setFavorites] = useState([]);
   const [books, setBooks] = useState([]);
   const [searchParams, setSearchParams] = useState({
