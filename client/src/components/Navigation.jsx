@@ -27,6 +27,7 @@ const Links = [
   { name: "Library", path: "/library" },
   { name: "MyFavorites", path: "/my-favorites" },
   { name: "About Us", path: "/about-us" },
+  { name: "Sir PaperClip", path: "/paperclip"}
 ];
 
 const NavLink = ({ children, to }) => {

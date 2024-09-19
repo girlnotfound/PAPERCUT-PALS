@@ -175,7 +175,10 @@ const BookDetails = () => {
             _id: data.addComment.comments[data.addComment.comments.length -1]._id
           };
           setComments(prevComments => [...prevComments, newCommentWithId]);
-          // getBookAgain();
+          setBook(prevBook => ({
+            ...prevBook,
+            commentCount: (prevBook.commentCount || 0) + 1
+          }));
 
           setNewComment("");
           toast({
@@ -227,6 +230,11 @@ const BookDetails = () => {
         refetchQueries: [{ query: QUERY_BOOK, variables: { bookId: id } }]
       });
       setComments(prevComments => prevComments.filter(comment => comment._id !== commentId));
+      setBook(prevBook => ({
+        ...prevBook,
+        commentCount: Math.max((prevBook.commentCount || 0) - 1, 0)
+      }));
+
       toast({
         title: "Comment removed",
         status: "success",
@@ -325,7 +333,7 @@ const BookDetails = () => {
 
       <Divider my={8} />
         <VStack align="start" spacing={4}>
-        <Heading as="h3" size="md">Comments</Heading>
+        <Heading as="h3" size="md">{book.commentCount} Comments</Heading>
           {comments.length > 0 ? (
             comments.map((comment) => (
               <Box key={comment._id} p={2} bg="gray.100" borderRadius="md" width="100%" boxShadow='xl' border="1px solid" borderColor='#aaabad'>
