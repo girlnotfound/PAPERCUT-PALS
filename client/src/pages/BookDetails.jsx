@@ -23,6 +23,9 @@ import { QUERY_BOOK, QUERY_USER } from "../utils/queries";
 import { FAVORITE_BOOK, UNFAVORITE_BOOK, ADD_COMMENT, REMOVE_COMMENT } from "../utils/mutations";
 
 const BookDetails = () => {
+  if (!AuthService.loggedIn()) {
+    window.location.assign("/signin");
+    }
   const navigate = useNavigate();
   const toast = useToast();
   const { id } = useParams();

@@ -22,6 +22,9 @@ import {
 import AuthService from "../utils/auth";
 
 const BookOfTheMonth = () => {
+  if (!AuthService.loggedIn()) {
+    window.location.assign("/signin");
+    }
   const [featuredBooks, setFeaturedBooks] = useState([]);
   const [favoriteBookIds, setFavoriteBookIds] = useState([]);
   const [newComments, setNewComments] = useState({});
