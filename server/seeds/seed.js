@@ -14,18 +14,48 @@ const fetchBooks = async (genre) => {
         printType: 'books'
       }
     });
+    return response.data.items
+      .filter(book => book.volumeInfo.imageLinks && book.volumeInfo.imageLinks.thumbnail && book.volumeInfo.imageLinks.thumbnail !== "https://via.placeholder.com/128x192")
+      .map(book => ({
+        _id: book.id,
+        title: book.volumeInfo.title,
+        imageLink: book.volumeInfo.imageLinks.thumbnail,
+        author: book.volumeInfo.authors?.[0] || 'Unknown Author',
+        genre: genre,
+        description: book.volumeInfo.description || 'No description available',
+        publisher: book.volumeInfo.publisher || 'Unknown Publisher',
+        published: book.volumeInfo.publishedDate || 'Unknown',
+        comments: []
+      }));
+  } catch (error) {
+    console.error('Error fetching books:', error);
+    return [];
+  }
+};
 
-    return response.data.items.map(book => ({
-      _id: book.id,
-      title: book.volumeInfo.title,
-      imageLink: book.volumeInfo.imageLinks?.thumbnail || "https://via.placeholder.com/128x192",
-      author: book.volumeInfo.authors?.[0] || 'Unknown Author',
-      genre: genre,
-      description: book.volumeInfo.description || 'No description available',
-      publisher: book.volumeInfo.publisher || 'Unknown Publisher',
-      published: book.volumeInfo.publishedDate || 'Unknown',
-      comments: []
-    }));
+const fetchBooksByAuthor = async (author) => {
+  try {
+    const response = await axios.get('https://www.googleapis.com/books/v1/volumes', {
+      params: {
+        q: `inauthor:${author}`,
+        maxResults: 40,
+        orderBy: 'relevance',
+        printType: 'books'
+      }
+    });
+    return response.data.items
+      .filter(book => book.volumeInfo.imageLinks && book.volumeInfo.imageLinks.thumbnail && book.volumeInfo.imageLinks.thumbnail !== "https://via.placeholder.com/128x192")
+      .map(book => ({
+        _id: book.id,
+        title: book.volumeInfo.title,
+        imageLink: book.volumeInfo.imageLinks.thumbnail,
+        author: book.volumeInfo.authors?.[0] || 'Unknown Author',
+        genre: book.volumeInfo.categories?.join(", ") || "Unknown",
+        description: book.volumeInfo.description || 'No description available',
+        publisher: book.volumeInfo.publisher || 'Unknown Publisher',
+        published: book.volumeInfo.publishedDate || 'Unknown',
+        comments: []
+      }));
   } catch (error) {
     console.error('Error fetching books:', error);
     return [];
@@ -45,9 +75,7 @@ const createMockUsers = async () => {
     { username: 'FrankSinatra', email: 'frank@example.com', password: 'myway' },
     { username: 'GraceHopper', email: 'grace@example.com', password: 'compiler' }
   ];
-
   const createdUsers = [];
-
   for (const user of mockUsers) {
     const newUser = await User.create({
       username: user.username,
@@ -56,8 +84,36 @@ const createMockUsers = async () => {
     });
     createdUsers.push(newUser);
   }
-
   return createdUsers;
+};
+
+const fetchBooksByTitle = async (title) => {
+  try {
+    const response = await axios.get('https://www.googleapis.com/books/v1/volumes', {
+      params: {
+        q: `intitle:${title}`,
+        maxResults: 40,
+        orderBy: 'relevance',
+        printType: 'books'
+      }
+    });
+    return response.data.items
+      .filter(book => book.volumeInfo.imageLinks && book.volumeInfo.imageLinks.thumbnail && book.volumeInfo.imageLinks.thumbnail !== "https://via.placeholder.com/128x192")
+      .map(book => ({
+        _id: book.id,
+        title: book.volumeInfo.title,
+        imageLink: book.volumeInfo.imageLinks.thumbnail,
+        author: book.volumeInfo.authors?.[0] || 'Unknown Author',
+        genre: book.volumeInfo.categories?.join(", ") || "Unknown",
+        description: book.volumeInfo.description || 'No description available',
+        publisher: book.volumeInfo.publisher || 'Unknown Publisher',
+        published: book.volumeInfo.publishedDate || 'Unknown',
+        comments: []
+      }));
+  } catch (error) {
+    console.error('Error fetching books:', error);
+    return [];
+  }
 };
 
 const bookExists = async (bookId) => {
@@ -88,7 +144,6 @@ const addMockComments = async (books, users) => {
     "The plot twists were unexpected and brilliantly executed.",
     "A comfort read that I'll return to again and again."
   ];
-
   for (const book of books) {
     for (let i = 0; i < 3; i++) {
       const randomUser = users[Math.floor(Math.random() * users.length)];
@@ -109,10 +164,37 @@ db.once('open', async () => {
     await cleanDB('User', 'users');
 
     const genres = ['fiction', 'nonfiction', 'romance', 'horror', 'fantasy', 'adventure', 'biographies'];
+    const authors = ['J.K. Rowling', 'George R.R. Martin', 'Stephen King', 'Agatha Christie', 'Jane Austen'];
+    const titles = ['Eldest', 'Harry Potter and The Deathly Hollows', 'A Game of Thrones'];
+
     let allBooks = [];
 
     for (let i = 0; i < genres.length; i++) {
       const data = await fetchBooks(genres[i]);
+      for (const bookData of data) {
+        if (!(await bookExists(bookData._id))) {
+          const createdBook = await Book.create(bookData);
+          allBooks.push(createdBook);
+        } else {
+          console.log(`Book with ID ${bookData._id} already exists. Skipping.`);
+        }
+      }
+    }
+
+    for (let i = 0; i < authors.length; i++) {
+      const data = await fetchBooksByAuthor(authors[i]);
+      for (const bookData of data) {
+        if (!(await bookExists(bookData._id))) {
+          const createdBook = await Book.create(bookData);
+          allBooks.push(createdBook);
+        } else {
+          console.log(`Book with ID ${bookData._id} already exists. Skipping.`);
+        }
+      }
+    }
+
+    for (let i = 0; i < titles.length; i++) {
+      const data = await fetchBooksByTitle(titles[i]);
       for (const bookData of data) {
         if (!(await bookExists(bookData._id))) {
           const createdBook = await Book.create(bookData);

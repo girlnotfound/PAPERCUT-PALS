@@ -22,6 +22,9 @@ import {
 import AuthService from "../utils/auth";
 
 const BookOfTheMonth = () => {
+  if (!AuthService.loggedIn()) {
+    window.location.assign("/signin");
+    }
   const [featuredBooks, setFeaturedBooks] = useState([]);
   const [favoriteBookIds, setFavoriteBookIds] = useState([]);
   const [newComments, setNewComments] = useState({});
@@ -53,10 +56,15 @@ const BookOfTheMonth = () => {
   useEffect(() => {
     if (booksData && booksData.books) {
       // Replace these IDs with the actual IDs of the books you want to feature
-      const featuredBookIds = ["KuYjyCkM2V4C", "GZAoAQAAIAAJ", "bIZiAAAAMAAJ"];
-      const selectedBooks = booksData.books.filter((book) =>
-        featuredBookIds.includes(book._id)
-      );
+      const featuredBookIds = ["J.K. Rowling", "George R.R. Martin", "Christopher Paolini"];
+      const selectedBooks = [];
+      
+      for (const title of featuredBookIds) {
+        const book = booksData.books.find(book => book.author.toLowerCase() === title.toLowerCase());
+        if (book) {
+          selectedBooks.push(book);
+        }
+      }
       setFeaturedBooks(selectedBooks);
     }
   }, [booksData]);
@@ -180,7 +188,7 @@ const BookOfTheMonth = () => {
               overflow="hidden"
               boxShadow="xl"
             >
-              <Box bgGradient={bgGradient} p={4}>
+              <Box bg="#5f7688" p={4}>
                 <Heading as="h2" size="md" color="white" mb={4}>
                   Featured Book {index + 1}
                 </Heading>
@@ -208,6 +216,7 @@ const BookOfTheMonth = () => {
                       {comment.commentAuthor === currentUsername && (
                         <Button
                           size="xs"
+                          colorScheme='teal'
                           onClick={() =>
                             handleRemoveComment(book._id, comment._id)
                           }

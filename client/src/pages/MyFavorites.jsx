@@ -14,6 +14,10 @@ import { useMutation, useQuery, useLazyQuery } from "@apollo/client";
 import { QUERY_BOOK, QUERY_USER } from "../utils/queries";
 
 export default function MyFavorites() {
+
+  if (!AuthService.loggedIn()) {
+    window.location.assign("/signin");
+    }
   const [favorites, setFavorites] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [unFavoriteBook] = useMutation(UNFAVORITE_BOOK);

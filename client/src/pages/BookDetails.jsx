@@ -23,6 +23,9 @@ import { QUERY_BOOK, QUERY_USER } from "../utils/queries";
 import { FAVORITE_BOOK, UNFAVORITE_BOOK, ADD_COMMENT, REMOVE_COMMENT } from "../utils/mutations";
 
 const BookDetails = () => {
+  if (!AuthService.loggedIn()) {
+    window.location.assign("/signin");
+    }
   const navigate = useNavigate();
   const toast = useToast();
   const { id } = useParams();
@@ -175,7 +178,10 @@ const BookDetails = () => {
             _id: data.addComment.comments[data.addComment.comments.length -1]._id
           };
           setComments(prevComments => [...prevComments, newCommentWithId]);
-          // getBookAgain();
+          setBook(prevBook => ({
+            ...prevBook,
+            commentCount: (prevBook.commentCount || 0) + 1
+          }));
 
           setNewComment("");
           toast({
@@ -227,6 +233,11 @@ const BookDetails = () => {
         refetchQueries: [{ query: QUERY_BOOK, variables: { bookId: id } }]
       });
       setComments(prevComments => prevComments.filter(comment => comment._id !== commentId));
+      setBook(prevBook => ({
+        ...prevBook,
+        commentCount: Math.max((prevBook.commentCount || 0) - 1, 0)
+      }));
+
       toast({
         title: "Comment removed",
         status: "success",
@@ -244,6 +255,7 @@ const BookDetails = () => {
       });
     }
   };
+  console.log(book);
   
   const bgGradient = useColorModeValue(
     "linear-gradient(-20deg, #D558C8 0%, #24D292 100%)",
@@ -256,7 +268,13 @@ const BookDetails = () => {
   if (!book) return <Box>No book found</Box>;
 
   return (
-    <Container maxW="container.xl" py={10} bg={bgGradient}>
+    <Box
+    width="100%"
+    minHeight="100vh"
+    bgGradient={bgGradient}
+    paddingY={8}
+    >
+    <Container maxW="container.xl" py={10} >
       <Box bg="#edf2f7" p={6} borderRadius="lg" boxShadow={boxShadow}>
       <Flex direction={{ base: "column", md: "row" }} gap={8}>
         <Box flex={1}>
@@ -319,7 +337,7 @@ const BookDetails = () => {
 
       <Divider my={8} />
         <VStack align="start" spacing={4}>
-        <Heading as="h3" size="md">Comments</Heading>
+        <Heading as="h3" size="md">{book.commentCount} Comments</Heading>
           {comments.length > 0 ? (
             comments.map((comment) => (
               <Box key={comment._id} p={2} bg="gray.100" borderRadius="md" width="100%" boxShadow='xl' border="1px solid" borderColor='#aaabad'>
@@ -348,6 +366,7 @@ const BookDetails = () => {
         </VStack>
       </Box>
     </Container>
+    </Box>
   );
 };
 

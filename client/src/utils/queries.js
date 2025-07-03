@@ -77,6 +77,7 @@ export const QUERY_BOOK = gql`
         commentText
         createdAt
       }
+      commentCount
     }
   }
 `;

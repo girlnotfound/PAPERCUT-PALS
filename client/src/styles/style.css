@@ -6,42 +6,6 @@ footer {
   justify-content: center;
 }
 
-/* homepage carousel styling */
-.homepage-container {
-  text-align: center;
-  display: flex;
-  justify-content: center; /* Centers horizontally */
-  align-items: center; /* Centers vertically */
-  height: 75vh; /* Adjust if necessary to fit your design needs */
-}
-
-.carousel {
-  background: #a2a2a2;
-  width: 100%; /* Takes full width to respect centering */
-  height: 70vh; /* Set to 70% of the viewport height */
-  display: flex; /* Ensures that flex properties apply to child elements */
-  flex-direction: row; /* Stacks children vertically */
-  justify-content: center; /* Vertically centers the children */
-}
-
-.carousel-cell {
-  width: 30%;
-  height: 100%; /* Set to 80% of the .carousel height */
-  margin-right: 10px;
-  background: #8c8;
-  border-radius: 5px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-  color: white;
-}
-
-.flickity-enabled:focus .flickity-viewport {
-  outline: thin dotted;
-  outline: 5px auto -webkit-focus-ring-color;
-}
-
 /* base styles for SignIn.jsx */
 .main-container {
   width: 100vw;

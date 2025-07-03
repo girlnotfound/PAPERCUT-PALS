@@ -65,9 +65,22 @@ const bookSchema = new Schema({
         default: Date.now,
         get: (timestamp) => dateFormat(timestamp),
       },
-    },
+    }
   ],
+}, {
+  toJSON: {
+    virtuals: true,
+    getters: true
+  },
 });
+
+// Create a virtual property `commentCount` that gets the length of comments Array
+bookSchema
+  .virtual('commentCount')
+  // Getter
+  .get(function () {
+    return `${this.comments.length}`;
+  })
 
 const Book = model('Book', bookSchema);
 

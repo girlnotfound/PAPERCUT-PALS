@@ -16,7 +16,7 @@ import {
 import { ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
 
 const SearchBar = ({ onSearch }) => {
-  const [filterOption, setFilterOption] = useState("All");
+  const [filterOption, setFilterOption] = useState("Genre");
   const [searchQuery, setSearchQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
@@ -25,10 +25,6 @@ const SearchBar = ({ onSearch }) => {
   const handleFilterChange = (option) => {
     setFilterOption(option);
     setIsOpen(false);
-    if (option === "All") {
-      setSearchQuery("");
-      onSearch("", "All");
-    }
   };
 
   const handleSearchChange = (event) => {
@@ -37,7 +33,7 @@ const SearchBar = ({ onSearch }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (filterOption !== "All" && searchQuery) {
+    if (searchQuery) {
       onSearch(searchQuery, filterOption);
     }
   };
@@ -57,7 +53,6 @@ const SearchBar = ({ onSearch }) => {
               </MenuButton>
               <Portal>
                 <MenuList zIndex={1000} sx={{ ...menuListStyles, boxShadow: "none" }}>
-                  <MenuItem onClick={() => handleFilterChange("All")}>All</MenuItem>
                   <MenuItem onClick={() => handleFilterChange("Genre")}>Genre</MenuItem>
                   <MenuItem onClick={() => handleFilterChange("Title")}>Title</MenuItem>
                   <MenuItem onClick={() => handleFilterChange("Author")}>Author</MenuItem>
@@ -67,12 +62,11 @@ const SearchBar = ({ onSearch }) => {
           </Box>
         </InputLeftAddon>
         <Input
-          placeholder={filterOption === "All" ? "Showing all books" : `Search by ${filterOption.toLowerCase()}...`}
+          placeholder={`Search by ${filterOption.toLowerCase()}...`}
           value={searchQuery}
           onChange={handleSearchChange}
           borderRadius={0}
           bg="white"
-          isDisabled={filterOption === "All"}
         />
         <InputRightAddon p={0} bg="white">
           <Button
@@ -82,7 +76,6 @@ const SearchBar = ({ onSearch }) => {
             height="100%"
             bg="white"
             _hover={{ bg: "gray.100" }}
-            isDisabled={filterOption === "All"}
           >
             Search
           </Button>
