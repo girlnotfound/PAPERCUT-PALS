@@ -77,7 +77,7 @@ const PaperClip = () => {
       const systemContent = `You are Sir PaperClip, a book expert of PaperCut Pals (a book search web app). Keep it short, accurate and conversational. The user is: ${username}, ${greetMessage} The user's favorite books: ${favoriteBookTitles}. Focus on books.`;
 
       const response = await axios.post(API_URL, {
-        model: "mistral-7b-instruct",
+        model: "sonar",
         messages: [
           {
             role: "system",
